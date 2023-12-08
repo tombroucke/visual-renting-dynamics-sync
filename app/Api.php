@@ -3,7 +3,10 @@
 namespace Otomaties\VisualRentingDynamicsSync;
 
 use Monolog\Logger;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Collection;
+use GuzzleHttp\Exception\RequestException;
 
 class Api
 {
@@ -12,98 +15,85 @@ class Api
     
     const API_VERSION = 'v3';
 
-    public function __construct(private string $apikey, private Logger $logger)
+    const MAX_RETRIES = 2;
+
+    public function __construct(private string $apikey, private Client $client, private Logger $logger)
     {
     }
 
     public function articles() : Collection
     {
-        $endpoint = '/artikelen';
-        return collect($this->get($endpoint));
+        return $this->collectJson($this->get('/artikelen'));
     }
 
-    public function articleImage(string $sku, int $imageNumber) : array
+    public function articleImage(string $sku, int $imageNumber) : Response
     {
-        $endpoint = '/artikelen/' . $sku . '/afbeeldingen/' . $imageNumber;
-        return $this->get($endpoint, [], 'image');
+        return $this->get("/artikelen/{$sku}/afbeeldingen/{$imageNumber}");
     }
 
     public function articleImageEndpoint(string $sku, int $imageNumber) : string
     {
-        $endpoint = '/artikelen/' . $sku . '/afbeeldingen/' . $imageNumber;
-        return self::API_URL . '/' . self::API_VERSION . $endpoint;
+        return $this->url("/artikelen/{$sku}/afbeeldingen/{$imageNumber}");
     }
 
-    public function articleDocument(string $sku, int $documentId) : array
+    public function articleDocument(string $sku, int $documentId) : Response
     {
-        $endpoint = '/artikelen/' . $sku . '/documenten/' . $documentId;
-        return $this->get($endpoint, [], 'image');
+        return $this->get("/artikelen/{$sku}/documenten/{$documentId}");
     }
 
     public function articleDocumentEndpoint(string $sku, int $documentId) : string
     {
-        $endpoint = '/artikelen/' . $sku . '/documenten/' . $documentId;
-        return self::API_URL . '/' . self::API_VERSION . $endpoint;
+        return $this->url("/artikelen/{$sku}/documenten/{$documentId}");
     }
 
     public function categories() : Collection
     {
-        $endpoint = '/categorieen';
-        return collect($this->get($endpoint));
+        return $this->collectJson($this->get('/categorieen'));
     }
 
-    public function categoryImage(string $categoryId) : array
+    public function categoryImage(string $categoryId) : Response
     {
-        $endpoint = '/categorieen/' . $categoryId . '/afbeelding';
-        return $this->get($endpoint, [], 'image');
+        return $this->get("/categorieen/{$categoryId}/afbeelding");
     }
 
     public function categoryImageEndpoint(string $categoryId) : string
     {
-        $endpoint = '/categorieen/' . $categoryId . '/afbeelding';
-        return self::API_URL . '/' . self::API_VERSION . $endpoint;
+        return $this->url("/categorieen/{$categoryId}/afbeelding");
     }
 
     public function subcategories() : Collection
     {
-        $endpoint = '/subcategorieen';
-        return collect($this->get($endpoint));
+        return $this->collectJson($this->get('/subcategorieen'));
     }
 
-    public function subcategoryImage(string $subcategoryId) : array
+    public function subcategoryImage(string $subcategoryId) : Response
     {
-        $endpoint = '/subcategorieen/' . $subcategoryId . '/afbeelding';
-        return $this->get($endpoint, [], 'image');
+        return $this->get("/subcategorieen/{$subcategoryId}/afbeelding");
     }
 
     public function subcategoryImageEndpoint(string $subcategoryId) : string
     {
-        $endpoint = '/subcategorieen/' . $subcategoryId . '/afbeelding';
-        return self::API_URL . '/' . self::API_VERSION . $endpoint;
+        return $this->url("/subcategorieen/{$subcategoryId}/afbeelding");
     }
 
     public function subsubcategories() : Collection
     {
-        $endpoint = '/subsubcategorieen';
-        return collect($this->get($endpoint));
+        return $this->collectJson($this->get('/subsubcategorieen'));
     }
 
-    public function subsubcategoryImage(string $subsubcategoryId) : array
+    public function subsubcategoryImage(string $subsubcategoryId) : Response
     {
-        $endpoint = '/subsubcategorieen/' . $subsubcategoryId . '/afbeelding';
-        return $this->get($endpoint, [], 'image');
+        return $this->get("/subsubcategorieen/{$subsubcategoryId}/afbeelding");
     }
 
     public function subsubcategoryImageEndpoint(string $subsubcategoryId) : string
     {
-        $endpoint = '/subsubcategorieen/' . $subsubcategoryId . '/afbeelding';
-        return self::API_URL . '/' . self::API_VERSION . $endpoint;
+        return $this->url("/subsubcategorieen/{$subsubcategoryId}/afbeelding");
     }
 
-    public function requestOrder(array $params) : array
+    public function requestOrder(array $params) : Response
     {
-        $endpoint = '/aanvraagorder/';
-        return $this->post($endpoint, $params);
+        return $this->post('/aanvraagorder/', $params);
     }
 
     private function url(string $endpoint, array $params = []) : string
@@ -124,57 +114,63 @@ class Api
         ];
     }
 
-    private function get(string $endpoint, array $params = [], string $returnType = 'json') : mixed
+    private function collectJson(Response $response) : Collection
     {
-        $args = [
-            'headers' => $this->headers(),
-        ];
+        return collect(json_decode(
+            $response->getBody()
+                ->getContents(), 
+            true
+        ));
+    }
 
-        $response = $this->backoffRetry(function () use ($endpoint, $params, $args) {
-            return wp_remote_get($this->url($endpoint, $params), $args);
-        });
-        
-        if ($returnType === 'json') {
-            $body = wp_remote_retrieve_body($response);
-            $data = json_decode($body, true);
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new \Exception(json_last_error_msg());
-            }
-            return $data;
+    private function get(string $endpoint, array $params = [], $retryCount = 0) : mixed
+    {
+        try {
+            $response = $this->client->request('GET', $this->url($endpoint, $params), [
+                'headers' => $this->headers(),
+            ]);
+        } catch (RequestException $e) {
+            return $this->handleException($e, [$this, 'get'], $endpoint, $params, $retryCount);
         }
         return $response;
     }
 
-    private function post(string $endpoint, array $params = []) : mixed
+    private function post(string $endpoint, array $params = [], $retryCount = 0) : mixed
     {
-        $args = [
-            'headers' => $this->headers(),
-            'body' => json_encode($params),
-        ];
-
-        $response = $this->backoffRetry(function () use ($endpoint, $args) {
-            return wp_remote_post($this->url($endpoint), $args);
-        });
-        
-        $body = wp_remote_retrieve_body($response);
-        $data = json_decode($body, true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \Exception(json_last_error_msg());
+        try {
+            $response = $this->client->request('POST', $this->url($endpoint), [
+                'headers' => $this->headers(),
+                'json' => $params,
+            ]);
+        } catch (RequestException $e) {
+            return $this->handleException($e, [$this, 'post'], $endpoint, $params, $retryCount);
         }
-        return $data;
+
+        return $response;
     }
 
-    private function backoffRetry(callable $callback, int $maxAttempts = 5) : mixed
+    private function handleException(RequestException $e, callable $method, string $endpoint, array $params, int $retryCount) : mixed
     {
-        $attempts = 0;
-        do {
-            try {
-                return $callback();
-            } catch (\Exception $e) {
-                $this->logger->error($e->getMessage());
-                sleep(pow(2, $attempts));
-            }
-        } while (++$attempts < $maxAttempts);
-        throw new \Exception('Maximum number of attempts reached');
+        $this->logger->error($e->getMessage(), [
+            'method' => $method,
+            'endpoint' => $endpoint,
+            'params' => $params,
+            'retryCount' => $retryCount,
+        ]);
+
+        if ($retryCount < self::MAX_RETRIES) {
+            $retryCount++;
+            return $method($endpoint, $params, $retryCount);
+        }
+        
+        throw new RequestException(
+            $e->getMessage(), 
+            $e->getRequest(), 
+            $e->getResponse(), 
+            $e->getPrevious(), 
+            $e->getHandlerContext()
+        );
+
+        return false;
     }
 }

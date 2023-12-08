@@ -31,7 +31,7 @@ class Checkout
             'adres' => $postedData['billing_address_1'] . ' ' . $postedData['billing_address_2'],
             'postcode' => $postedData['billing_postcode'],
             'plaats' => $postedData['billing_city'],
-            'telefoonnMobiel' => $postedData['billing_phone'],
+            'telefoonMobiel' => $postedData['billing_phone'],
             'email' => $postedData['billing_email'],
             'memo' => $postedData['order_comments'],
         ];

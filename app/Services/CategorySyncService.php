@@ -23,7 +23,7 @@ class CategorySyncService implements Runnable
     private function syncCategories($skipImages) : void
     {
         \WP_CLI::line("Fetching all categories from Visual Renting Dynamics API");
-
+        ray($this->api->categories());
         $this->api->categories()
             ->each(function($category) use ($skipImages) {
                 $args = [
@@ -135,12 +135,12 @@ class CategorySyncService implements Runnable
         }
 
         $imageResponse = $this->api->{$endpoints[$depth]['name'] . 'Image'}($category['id']);
-        $contentDisposition = wp_remote_retrieve_header($imageResponse, 'Content-Disposition');
-        $filename = str_replace("\"", "", explode('filename=', $contentDisposition)[1]);
+        $contentDisposition = $imageResponse->getHeader('Content-Disposition');
+        $filename = str_replace("\"", "", explode('filename=', $contentDisposition[0])[1]);
 
         $image = new Media([
             'url' => $this->api->{$endpoints[$depth]['name'] . 'ImageEndpoint'}($category['id']),
-            'filestream' => wp_remote_retrieve_body($imageResponse),
+            'filestream' => $imageResponse->getBody()->getContents(),
             'filename' => $filename,
             'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
             'date_modified' => $category['afbeeldingLaatstGewijzigdOp'],

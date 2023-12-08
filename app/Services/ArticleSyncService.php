@@ -93,12 +93,12 @@ class ArticleSyncService implements Runnable
                             return $article[$imageKey];
                     })->each(function($imageKey, $key) use ($article, &$media) {
                         $imageResponse = $this->api->articleImage($article['artikelcode'], ++$key);
-                        $contentDisposition = wp_remote_retrieve_header($imageResponse, 'Content-Disposition');
-                        $filename = str_replace("\"", "", explode('filename=', $contentDisposition)[1]);
+                        $contentDisposition = $imageResponse->getHeader('Content-Disposition');
+                        $filename = str_replace("\"", "", explode('filename=', $contentDisposition[0])[1]);
     
                         $media[] = [
                             'url' => $this->api->articleImageEndpoint($article['artikelcode'], $key),
-                            'filestream' => wp_remote_retrieve_body($imageResponse),
+                            'filestream' => $imageResponse->getBody()->getContents(),
                             'filename' => $filename,
                             'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
                             'date_modified' => $article['afbeelding' . $key . 'LaatstGewijzigdOp'],
@@ -118,7 +118,7 @@ class ArticleSyncService implements Runnable
 
                         $media[] = [
                             'url' => $this->api->articleDocumentEndpoint($document['artikelcode'], $document['id']),
-                            'filestream' => wp_remote_retrieve_body($documentResponse),
+                            'filestream' => $documentResponse->getBody()->getContents(),
                             'filename' => $filename,
                             'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
                             'date_modified' => $document['bestandLaatstGewijzigdOp'],

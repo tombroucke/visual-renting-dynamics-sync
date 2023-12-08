@@ -37,9 +37,14 @@ class Plugin extends Container
 
         $this->addRentalProductType();
 
-        $this->make(Cart::class)->runHooks();
-        $this->make(Checkout::class)->runHooks();
-        $this->make(Product::class)->runHooks();
+        collect([
+            Cart::class, 
+            Checkout::class, 
+            Product::class
+        ])
+        ->each(function ($class) {
+            $this->make($class)->runHooks();
+        });
     }
 
     public function addRentalProductType(): void
@@ -58,5 +63,11 @@ class Plugin extends Container
 
         add_action('admin_footer', [RentalProduct::class, 'addRentalProductFields']);
         add_action('woocommerce_rental_add_to_cart', [RentalProduct::class, 'addToCartButton']);
+    }
+
+    public function render(string $template, array $context = []): void
+    {
+        extract($context, EXTR_SKIP);
+        include __DIR__ . "/../views/{$template}.php";
     }
 }

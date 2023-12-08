@@ -6,6 +6,7 @@ use Monolog\Handler\StreamHandler;
 use Otomaties\VisualRentingDynamicsSync\Api;
 use Otomaties\VisualRentingDynamicsSync\Plugin;
 use Otomaties\VisualRentingDynamicsSync\Admin\Settings;
+use Otomaties\VisualRentingDynamicsSync\Helpers\View;
 
 /*
  * Plugin Name:       Visual Renting Dynamics Sync
@@ -62,7 +63,13 @@ add_action('visual_renting_dynamics_sync', function ($plugin) {
     $plugin->singleton(Api::class, function ($plugin, $args) {
         $apiKey = $plugin->make(Settings::class)->get('api_key');
         $logger = $plugin->make(Logger::class);
-        return new Api($apiKey, $logger);
+        $client = $plugin->make(\GuzzleHttp\Client::class);
+        return new Api($apiKey, $client, $logger);
+    });
+
+    $plugin->bind(View::class, function ($plugin, $args) {
+        $path = plugin_dir_path(__FILE__) . 'resources/views/';
+        return new View($path);
     });
 });
 
