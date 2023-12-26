@@ -18,13 +18,17 @@ class CommandRegistrar
         }
 
         foreach ($this->commands as $commandClass) {
-            \WP_CLI::add_command($commandClass::COMMAND_NAME, function ($args, $assocArgs) use ($commandClass) {
-                $commandInstance = $this->container->make($commandClass);
-                $commandInstance->handle($args, $assocArgs);
-            }, [
+            \WP_CLI::add_command(
+                $commandClass::COMMAND_NAME,
+                function ($args, $assocArgs) use ($commandClass) {
+                    $commandInstance = $this->container->make($commandClass);
+                    $commandInstance->handle($args, $assocArgs);
+                },
+                [
                 'shortdesc' => $commandClass::COMMAND_DESCRIPTION,
                 'synopsis' => $commandClass::COMMAND_ARGUMENTS,
-            ]);
+                ]
+            );
         }
     }
 }

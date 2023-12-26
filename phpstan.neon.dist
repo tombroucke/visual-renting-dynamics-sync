@@ -1,0 +1,12 @@
+#$ vendor/bin/phpstan analyze
+
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+parameters:
+    level: 6
+    inferPrivatePropertyTypeFromConstructor: true
+    bootstrapFiles:
+        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+        - vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php
+    paths:
+        - app/

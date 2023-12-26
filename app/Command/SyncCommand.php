@@ -31,8 +31,7 @@ class SyncCommand implements CommandContract
     public function __construct(
         private CategorySyncService $categorySyncService,
         private ArticleSyncService $articleSyncService,
-    )
-    {
+    ) {
     }
 
     /**

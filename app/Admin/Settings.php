@@ -6,7 +6,7 @@ class Settings
 {
     const PREFIX = 'VISUAL_RENTING_DYNAMICS_';
     
-    public function get(string $setting)
+    public function get(string $setting) : ?string
     {
         return $this->findVariable($setting);
     }
@@ -28,5 +28,3 @@ class Settings
         return null;
     }
 }
-
-

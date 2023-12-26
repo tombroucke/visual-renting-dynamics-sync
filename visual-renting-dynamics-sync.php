@@ -1,6 +1,5 @@
 <?php
 
-
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Otomaties\VisualRentingDynamicsSync\Api;
@@ -11,13 +10,13 @@ use Otomaties\VisualRentingDynamicsSync\Helpers\View;
 /*
  * Plugin Name:       Visual Renting Dynamics Sync
  * Description:       Syncs Visual Renting Dynamics with WooCommerce
- * Version:           0.1.0
+ * Version:           1.0
  * Author:            Tom Broucke
  * Author URI:        https://tombroucke.be
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       visual-renting-dynamics-sync
- * Domain Path:       /languages
+ * Domain Path:       /resources/languages
  */
 
 // If this file is called directly, abort.

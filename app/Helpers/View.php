@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Otomaties\VisualRentingDynamicsSync\Helpers;
 

@@ -25,44 +25,55 @@ class CategorySyncService implements Runnable
         \WP_CLI::line("Fetching all categories from Visual Renting Dynamics API");
         ray($this->api->categories());
         $this->api->categories()
-            ->each(function($category) use ($skipImages) {
-                $args = [
+            ->each(
+                function ($category) use ($skipImages) {
+                    $args = [
                     'id' => 'category_' . $category['id'],
                     'name' => $category['categorienaam'],
-                ];
-                if (!$skipImages) {
-                    $args['thumbnail_id'] = $this->fetchImagefromCategory($category);
+                    ];
+                    if (!$skipImages) {
+                        $args['thumbnail_id'] = $this->fetchImagefromCategory($category);
+                    }
+                    $this->upsertTerm($args);
                 }
-                $this->upsertTerm($args);
-            });
-
+            );
     }
     private function syncSubcategories($skipImages) : void
     {
         \WP_CLI::line("Fetching all subcategories from Visual Renting Dynamics API");
 
         $this->api->subcategories()
-            ->filter(function($subCategory) {
-                return $subCategory['id'] !== 'category_' . $subCategory['categorieId'];
-            })
-            ->filter(function($subCategory) {
-                $parentCategory = $this->findProductCategoriesByExternalId('category_' . $subCategory['categorieId']);
-                return !is_wp_error($parentCategory) && !empty($parentCategory);
-            })
-            ->each(function($subCategory) use ($skipImages) {
-                $parentCategory = $this->findProductCategoriesByExternalId('category_' . $subCategory['categorieId']);
-                $args = [
+            ->filter(
+                function ($subCategory) {
+                    return $subCategory['id'] !== 'category_' . $subCategory['categorieId'];
+                }
+            )
+            ->filter(
+                function ($subCategory) {
+                    $parentCategory = $this->findProductCategoriesByExternalId(
+                        'category_' . $subCategory['categorieId']
+                    );
+                    return !is_wp_error($parentCategory) && !empty($parentCategory);
+                }
+            )
+            ->each(
+                function ($subCategory) use ($skipImages) {
+                    $parentCategory = $this->findProductCategoriesByExternalId(
+                        'category_' . $subCategory['categorieId']
+                    );
+                    $args = [
                     'id' => 'subcategory_' . $subCategory['id'],
                     'name' => $subCategory['subcategorienaam'],
                     'parent' => $parentCategory[0]->term_id,
-                ];
+                    ];
 
-                if (!$skipImages) {
-                    $args['thumbnail_id'] = $this->fetchImagefromCategory($subCategory, 1);
-                }
+                    if (!$skipImages) {
+                        $args['thumbnail_id'] = $this->fetchImagefromCategory($subCategory, 1);
+                    }
                 
-                $this->upsertTerm($args);
-            });
+                    $this->upsertTerm($args);
+                }
+            );
     }
 
     private function syncSubSubCategories($skipImages) : void
@@ -70,36 +81,49 @@ class CategorySyncService implements Runnable
         \WP_CLI::line("Fetching all subsubcategories from Visual Renting Dynamics API");
 
         $this->api->subsubcategories()
-            ->filter(function($subSubCategory) {
-                return !empty($subSubCategory['subcategorieId']);
-            })
-            ->filter(function($subSubCategory) {
-                return $subSubCategory['id'] !== 'subcategory_' . $subSubCategory['subcategorieId'];
-            })
-            ->filter(function($subSubCategory) {
-                $parentCategory = $this->findProductCategoriesByExternalId('subcategory_' . $subSubCategory['subcategorieId']);
-                return !is_wp_error($parentCategory) && !empty($parentCategory);
-            })
-            ->each(function($subSubCategory) use ($skipImages) {
-                $parentCategory = $this->findProductCategoriesByExternalId('subcategory_' . $subSubCategory['subcategorieId']);
+            ->filter(
+                function ($subSubCategory) {
+                    return !empty($subSubCategory['subcategorieId']);
+                }
+            )
+            ->filter(
+                function ($subSubCategory) {
+                    return $subSubCategory['id'] !== 'subcategory_' . $subSubCategory['subcategorieId'];
+                }
+            )
+            ->filter(
+                function ($subSubCategory) {
+                    $parentCategory = $this->findProductCategoriesByExternalId(
+                        'subcategory_' . $subSubCategory['subcategorieId']
+                    );
+                    return !is_wp_error($parentCategory) && !empty($parentCategory);
+                }
+            )
+            ->each(
+                function ($subSubCategory) use ($skipImages) {
+                    $parentCategory = $this->findProductCategoriesByExternalId(
+                        'subcategory_' . $subSubCategory['subcategorieId']
+                    );
 
-                $args = [
+                    $args = [
                     'id' => 'subsubcategory_' . $subSubCategory['id'],
                     'name' => $subSubCategory['subsubcategorienaam'],
                     'parent' => $parentCategory[0]->term_id,
-                ];
+                    ];
 
-                if (!$skipImages) {
-                    $args['thumbnail_id'] = $this->fetchImagefromCategory($subSubCategory, 2);
+                    if (!$skipImages) {
+                        $args['thumbnail_id'] = $this->fetchImagefromCategory($subSubCategory, 2);
+                    }
+
+                    $this->upsertTerm($args);
                 }
-
-                $this->upsertTerm($args);
-            });
+            );
     }
 
     private function findProductCategoriesByExternalId(string $externalId) : array
     {
-        return get_terms([
+        return get_terms(
+            [
             'taxonomy' => 'product_cat',
             'hide_empty' => false,
             'meta_query' => [
@@ -108,7 +132,8 @@ class CategorySyncService implements Runnable
                     'value' => $externalId,
                 ],
             ],
-        ]);
+            ]
+        );
     }
 
     private function fetchImagefromCategory(array $category, int $depth = 0) : ?int
@@ -138,14 +163,16 @@ class CategorySyncService implements Runnable
         $contentDisposition = $imageResponse->getHeader('Content-Disposition');
         $filename = str_replace("\"", "", explode('filename=', $contentDisposition[0])[1]);
 
-        $image = new Media([
+        $image = new Media(
+            [
             'url' => $this->api->{$endpoints[$depth]['name'] . 'ImageEndpoint'}($category['id']),
             'filestream' => $imageResponse->getBody()->getContents(),
             'filename' => $filename,
             'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
             'date_modified' => $category['afbeeldingLaatstGewijzigdOp'],
             'group' => 'synced_images'
-        ]);
+            ]
+        );
 
         $imageId = $image->importAndAttachToPost();
 

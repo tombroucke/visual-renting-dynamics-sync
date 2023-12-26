@@ -116,19 +116,25 @@ class Api
 
     private function collectJson(Response $response) : Collection
     {
-        return collect(json_decode(
-            $response->getBody()
-                ->getContents(), 
-            true
-        ));
+        return collect(
+            json_decode(
+                $response->getBody()
+                    ->getContents(),
+                true
+            )
+        );
     }
 
     private function get(string $endpoint, array $params = [], $retryCount = 0) : mixed
     {
         try {
-            $response = $this->client->request('GET', $this->url($endpoint, $params), [
+            $response = $this->client->request(
+                'GET',
+                $this->url($endpoint, $params),
+                [
                 'headers' => $this->headers(),
-            ]);
+                ]
+            );
         } catch (RequestException $e) {
             return $this->handleException($e, [$this, 'get'], $endpoint, $params, $retryCount);
         }
@@ -138,10 +144,14 @@ class Api
     private function post(string $endpoint, array $params = [], $retryCount = 0) : mixed
     {
         try {
-            $response = $this->client->request('POST', $this->url($endpoint), [
+            $response = $this->client->request(
+                'POST',
+                $this->url($endpoint),
+                [
                 'headers' => $this->headers(),
                 'json' => $params,
-            ]);
+                ]
+            );
         } catch (RequestException $e) {
             return $this->handleException($e, [$this, 'post'], $endpoint, $params, $retryCount);
         }
@@ -149,14 +159,17 @@ class Api
         return $response;
     }
 
-    private function handleException(RequestException $e, callable $method, string $endpoint, array $params, int $retryCount) : mixed
+    private function handleException(RequestException $e, callable $method, string $endpoint, array $params, int $retryCount) : mixed // phpcs:ignore Generic.Files.LineLength.TooLong
     {
-        $this->logger->error($e->getMessage(), [
+        $this->logger->error(
+            $e->getMessage(),
+            [
             'method' => $method,
             'endpoint' => $endpoint,
             'params' => $params,
             'retryCount' => $retryCount,
-        ]);
+            ]
+        );
 
         if ($retryCount < self::MAX_RETRIES) {
             $retryCount++;
@@ -164,10 +177,10 @@ class Api
         }
         
         throw new RequestException(
-            $e->getMessage(), 
-            $e->getRequest(), 
-            $e->getResponse(), 
-            $e->getPrevious(), 
+            $e->getMessage(),
+            $e->getRequest(),
+            $e->getResponse(),
+            $e->getPrevious(),
             $e->getHandlerContext()
         );
 

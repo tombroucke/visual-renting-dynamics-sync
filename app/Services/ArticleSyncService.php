@@ -15,17 +15,22 @@ class ArticleSyncService implements Runnable
 
     public function run(array $args, array $assocArgs): void
     {
-        \WP_CLI::line(sprintf("Fetching %s products from Visual Renting Dynamics API", $assocArgs['article-limit'] ?? 'all'));
+        \WP_CLI::line(
+            sprintf("Fetching %s products from Visual Renting Dynamics API", $assocArgs['article-limit'] ?? 'all')
+        );
 
         $syncer = new Syncer('product');
 
         $this->api->articles()
-            ->filter(function($article) {
-                return $article['publicerenInternet'];
-            })
+            ->filter(
+                function ($article) {
+                    return $article['publicerenInternet'];
+                }
+            )
             ->take($assocArgs['article-limit'])
-            ->each(function($article) use ($syncer, $assocArgs) {
-                $args = [
+            ->each(
+                function ($article) use ($syncer, $assocArgs) {
+                    $args = [
                     'post_title' => $article['omschrijving'],
                     'post_content' => $article['omschrijvingUitgebreid'],
                     'meta_input' => [
@@ -65,77 +70,95 @@ class ArticleSyncService implements Runnable
                             '_weight' => $article['gewicht'],
                         ],
                     ],
-                ];
+                    ];
 
-                collect($article['alternatieven'])
-                    ->each(function($alternative) use (&$args) {
-                        $args['meta_input']['alternatives'][] = $alternative['artikelcodeAlternatief'];                        
-                    });
+                    collect($article['alternatieven'])
+                    ->each(
+                        function ($alternative) use (&$args) {
+                            $args['meta_input']['alternatives'][] = $alternative['artikelcodeAlternatief'];
+                        }
+                    );
 
-                collect($article['relaties'])
-                    ->each(function($relation) use (&$args) {
-                        $args['meta_input']['relations'][] = $relation['artikelcodeRelatie'];                        
-                    });
+                    collect($article['relaties'])
+                    ->each(
+                        function ($relation) use (&$args) {
+                            $args['meta_input']['relations'][] = $relation['artikelcodeRelatie'];
+                        }
+                    );
 
-                collect($article['tags'])
-                    ->each(function($tag) use (&$args) {
-                        $args['meta_input']['tags'][] = $tag['tag'];
-                    });
+                    collect($article['tags'])
+                    ->each(
+                        function ($tag) use (&$args) {
+                            $args['meta_input']['tags'][] = $tag['tag'];
+                        }
+                    );
                 
-                $media = [];
+                    $media = [];
 
-                if (!$assocArgs['skip-images']) {
-                    collect([
-                        'bevatAfbeelding1',
-                        'bevatAfbeelding2',
-                        'bevatAfbeelding3',
-                    ])->filter(function($imageKey) use ($article) {
-                            return $article[$imageKey];
-                    })->each(function($imageKey, $key) use ($article, &$media) {
-                        $imageResponse = $this->api->articleImage($article['artikelcode'], ++$key);
-                        $contentDisposition = $imageResponse->getHeader('Content-Disposition');
-                        $filename = str_replace("\"", "", explode('filename=', $contentDisposition[0])[1]);
+                    if (!$assocArgs['skip-images']) {
+                        collect(
+                            [
+                            'bevatAfbeelding1',
+                            'bevatAfbeelding2',
+                            'bevatAfbeelding3',
+                            ]
+                        )->filter(
+                            function ($imageKey) use ($article) {
+                                return $article[$imageKey];
+                            }
+                        )->each(
+                            function ($imageKey, $key) use ($article, &$media) {
+                                $imageResponse = $this->api->articleImage($article['artikelcode'], ++$key);
+                                $contentDisposition = $imageResponse->getHeader('Content-Disposition');
+                                $filename = str_replace("\"", "", explode('filename=', $contentDisposition[0])[1]);
     
-                        $media[] = [
-                            'url' => $this->api->articleImageEndpoint($article['artikelcode'], $key),
-                            'filestream' => $imageResponse->getBody()->getContents(),
-                            'filename' => $filename,
-                            'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
-                            'date_modified' => $article['afbeelding' . $key . 'LaatstGewijzigdOp'],
-                            'group'  => 'synced_images'
-                        ];
-                    });
+                                $media[] = [
+                                'url' => $this->api->articleImageEndpoint($article['artikelcode'], $key),
+                                'filestream' => $imageResponse->getBody()->getContents(),
+                                'filename' => $filename,
+                                'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
+                                'date_modified' => $article['afbeelding' . $key . 'LaatstGewijzigdOp'],
+                                'group'  => 'synced_images'
+                                ];
+                            }
+                        );
     
-                    if (!empty($media)) {
-                        $media[0]['featured'] = true;
+                        if (!empty($media)) {
+                            $media[0]['featured'] = true;
+                        }
                     }
-                }
 
-                collect($article['documenten'])
-                    ->each(function($document, $key) use (&$media) {
-                        $documentResponse = $this->api->articleDocument($document['artikelcode'], $document['id']);
-                        $filename = $document['bestandsnaam'];
+                    collect($article['documenten'])
+                        ->each(
+                            function ($document, $key) use (&$media) {
+                                $documentResponse = $this->api->articleDocument(
+                                    $document['artikelcode'],
+                                    $document['id']
+                                );
+                                $filename = $document['bestandsnaam'];
 
-                        $media[] = [
-                            'url' => $this->api->articleDocumentEndpoint($document['artikelcode'], $document['id']),
-                            'filestream' => $documentResponse->getBody()->getContents(),
-                            'filename' => $filename,
-                            'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
-                            'date_modified' => $document['bestandLaatstGewijzigdOp'],
-                            'group'  => 'synced_documents'
-                        ];
-                    });
+                                $media[] = [
+                                'url' => $this->api->articleDocumentEndpoint($document['artikelcode'], $document['id']),
+                                'filestream' => $documentResponse->getBody()->getContents(),
+                                'filename' => $filename,
+                                'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
+                                'date_modified' => $document['bestandLaatstGewijzigdOp'],
+                                'group'  => 'synced_documents'
+                                ];
+                            }
+                        );
 
-                $args['media'] = $media;
+                    $args['media'] = $media;
     
-                $existingPostQuery = [
+                    $existingPostQuery = [
                     'by'    => 'meta_value',
                     'key'   => '_sku',
                     'value' => $article['artikelcode'],
-                ];
+                    ];
                 
-                $syncer->addProduct($args, $existingPostQuery);
-            });
+                    $syncer->addProduct($args, $existingPostQuery);
+                }
+            );
 
         $products = $syncer->execute();
 
@@ -152,15 +175,17 @@ class ArticleSyncService implements Runnable
                 }
             }
 
-            $categoryKeys = array_reverse([
+            $categoryKeys = array_reverse(
+                [
                 'categoryId' => 'category',
                 'subcategoryId' => 'subcategory',
                 'subsubcategoryId' => 'subsubcategory',
-            ]);
+                ]
+            );
 
             $categoryId = null;
             $prefix = null;
-            foreach($categoryKeys as $categoryKey => $categoryPrefix) {
+            foreach ($categoryKeys as $categoryKey => $categoryPrefix) {
                 $categoryId = $product->get_meta($categoryKey, true);
                 $prefix = $categoryPrefix;
                 if ($categoryId) {
@@ -169,7 +194,8 @@ class ArticleSyncService implements Runnable
             }
 
             if ($categoryId) {
-                $terms = get_terms([
+                $terms = get_terms(
+                    [
                     'taxonomy' => 'product_cat',
                     'hide_empty' => false,
                     'meta_query' => [
@@ -178,7 +204,8 @@ class ArticleSyncService implements Runnable
                             'value' => $prefix . '_' . $categoryId,
                         ],
                     ],
-                ]);
+                    ]
+                );
 
                 if (!empty($terms)) {
                     wp_set_object_terms($product->get_ID(), $terms[0]->term_id, 'product_cat');

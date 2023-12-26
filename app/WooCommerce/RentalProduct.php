@@ -4,10 +4,10 @@ namespace Otomaties\VisualRentingDynamicsSync\WooCommerce;
 
 use Otomaties\VisualRentingDynamicsSync\Helpers\View;
 
-class RentalProduct extends \WC_Product 
-{    
+class RentalProduct extends \WC_Product
+{
     
-    public function get_type() : string
+    public function get_type() : string // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return 'rental';
     }
@@ -16,8 +16,8 @@ class RentalProduct extends \WC_Product
     {
         global $post, $product_object;
         
-        if (! $post) { 
-            return; 
+        if (! $post) {
+            return;
         }
         
         if ('product' != $post->post_type) {
@@ -29,13 +29,13 @@ class RentalProduct extends \WC_Product
         visualRentingDynamicSync()
             ->make(View::class)
             ->render(
-                'admin/rental-product-fields', 
+                'admin/rental-product-fields',
                 compact('isRental')
             );
     }
     
     public static function addToCartButton() : void
     {
-        do_action( 'woocommerce_simple_add_to_cart' );
+        do_action('woocommerce_simple_add_to_cart');
     }
 }
