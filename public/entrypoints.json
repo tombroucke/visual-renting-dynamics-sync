@@ -1,0 +1,21 @@
+{
+  "checkout": {
+    "js": [
+      "js/runtime.05fb93.js",
+      "js/checkout.9b6afc.js"
+    ],
+    "css": [
+      "css/checkout.62b421.css"
+    ],
+    "dependencies": []
+  },
+  "admin": {
+    "js": [
+      "js/runtime.05fb93.js"
+    ],
+    "css": [
+      "css/admin.409ac3.css"
+    ],
+    "dependencies": []
+  }
+}

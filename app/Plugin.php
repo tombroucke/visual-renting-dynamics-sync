@@ -2,7 +2,9 @@
 
 namespace Otomaties\VisualRentingDynamicsSync;
 
+use Illuminate\Support\Str;
 use Illuminate\Container\Container;
+use Otomaties\VisualRentingDynamicsSync\Admin\Admin;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\Cart;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\Product;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout;
@@ -39,52 +41,74 @@ class Plugin extends Container
             ->add(
                 'wc-quote-requested',
                 ['label' => __('Quote requested', 'visual-renting-dynamics-sync')]
+            )
+            ->add(
+                'wc-quote-failed',
+                ['label' => __('Quote request failed', 'visual-renting-dynamics-sync')]
             );
 
-        $this->bind(
-            Cart::class,
-            function () {
-                return new Cart(WC()->cart);
-            }
-        );
+        $this->bind(Cart::class, function () {
+            return new Cart(WC()->cart);
+        });
 
         $this->addRentalProductType();
 
-        collect(
-            [
-            Cart::class,
-            Checkout::class,
-            Product::class
-            ]
-        )
-            ->each(
-                function ($class) {
-                    $this->make($class)->runHooks();
-                }
-            );
+        collect([
+                Cart::class,
+                Checkout::class,
+                Product::class,
+                Admin::class
+            ])
+            ->each(function ($class) {
+                $this->make($class)->runHooks();
+            });
+        
+
+        $customEmailsClasses = collect(glob(__DIR__ . '/WooCommerce/Emails/*.php'))
+            ->map(fn ($file) => pathinfo($file, PATHINFO_FILENAME));
+
+        add_filter('woocommerce_email_classes', function($emailClasses) use ($customEmailsClasses) {
+            $customEmailsClasses
+                ->each(function ($class) use (&$emailClasses) {
+                    $emailClasses[$class] = $this->make("Otomaties\\VisualRentingDynamicsSync\\WooCommerce\\Emails\\{$class}");
+                });
+            return $emailClasses;
+        });
+
+        add_filter('woocommerce_email_actions', function($emailActions) use ($customEmailsClasses) {
+            $customEmailsClasses
+                ->each(function ($class) use (&$emailActions) {
+                    $status = Str::of($class)
+                        ->remove('Customer')
+                        ->kebab();
+                    
+                    $actions = [
+                        "woocommerce_order_status_pending_to_{$status}",
+                        "woocommerce_order_status_failed_to_{$status}"
+                    ];
+                    foreach ($actions as $action) {
+                        if (!in_array($action, $emailActions)) {
+                            $emailActions[] = $action;
+                        }
+                    }
+                });
+            return $emailActions;
+        });
     }
 
     public function addRentalProductType(): void
     {
-        add_filter(
-            'product_type_selector',
-            function ($productTypes) {
-                $productTypes['rental'] = __('Rental', 'visual-renting-dynamics-sync');
-                return $productTypes;
-            }
-        );
+        add_filter('product_type_selector', function ($productTypes) {
+            $productTypes['rental'] = __('Rental', 'visual-renting-dynamics-sync');
+            return $productTypes;
+        });
 
-        add_filter(
-            'woocommerce_product_class',
-            function ($className, $productType, $productId) {
-                if ($productType === 'rental') {
-                    return RentalProduct::class;
-                }
-                return $className;
-            },
-            10,
-            3
-        );
+        add_filter('woocommerce_product_class', function ($className, $productType, $productId) {
+            if ($productType === 'rental') {
+                return RentalProduct::class;
+            }
+            return $className;
+        }, 10, 3);
 
         add_action('admin_footer', [RentalProduct::class, 'addRentalProductFields']);
         add_action('woocommerce_rental_add_to_cart', [RentalProduct::class, 'addToCartButton']);

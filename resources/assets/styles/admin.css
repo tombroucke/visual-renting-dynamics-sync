@@ -1,0 +1,14 @@
+.order-status.status-quote-requested {
+    background: #c6e1c6;
+    color: #5b841b
+}
+
+.order-status.status-quote-failed {
+    background: #eba3a3;
+    color: #761919
+}
+
+.order-status.status-processing {
+    background: #e5e5e5;
+	color: #777;
+}

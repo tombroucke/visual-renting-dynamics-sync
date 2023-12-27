@@ -15,15 +15,16 @@ class CategorySyncService implements Runnable
 
     public function run(array $args, array $assocArgs): void
     {
-        $this->syncCategories($assocArgs['skip-images']);
-        $this->syncSubcategories($assocArgs['skip-images']);
-        $this->syncSubSubCategories($assocArgs['skip-images']);
+        $skipImages = $assocArgs['skip-images'];
+
+        $this->syncCategories($skipImages);
+        $this->syncSubcategories($skipImages);
+        $this->syncSubSubCategories($skipImages);
     }
 
-    private function syncCategories($skipImages) : void
+    private function syncCategories(bool $skipImages) : void
     {
         \WP_CLI::line("Fetching all categories from Visual Renting Dynamics API");
-        ray($this->api->categories());
         $this->api->categories()
             ->each(
                 function ($category) use ($skipImages) {
@@ -38,7 +39,7 @@ class CategorySyncService implements Runnable
                 }
             );
     }
-    private function syncSubcategories($skipImages) : void
+    private function syncSubcategories(bool $skipImages) : void
     {
         \WP_CLI::line("Fetching all subcategories from Visual Renting Dynamics API");
 
@@ -62,9 +63,9 @@ class CategorySyncService implements Runnable
                         'category_' . $subCategory['categorieId']
                     );
                     $args = [
-                    'id' => 'subcategory_' . $subCategory['id'],
-                    'name' => $subCategory['subcategorienaam'],
-                    'parent' => $parentCategory[0]->term_id,
+                        'id' => 'subcategory_' . $subCategory['id'],
+                        'name' => $subCategory['subcategorienaam'],
+                        'parent' => $parentCategory[0]->term_id,
                     ];
 
                     if (!$skipImages) {
@@ -76,7 +77,7 @@ class CategorySyncService implements Runnable
             );
     }
 
-    private function syncSubSubCategories($skipImages) : void
+    private function syncSubSubCategories(bool $skipImages) : void
     {
         \WP_CLI::line("Fetching all subsubcategories from Visual Renting Dynamics API");
 
@@ -106,9 +107,9 @@ class CategorySyncService implements Runnable
                     );
 
                     $args = [
-                    'id' => 'subsubcategory_' . $subSubCategory['id'],
-                    'name' => $subSubCategory['subsubcategorienaam'],
-                    'parent' => $parentCategory[0]->term_id,
+                        'id' => 'subsubcategory_' . $subSubCategory['id'],
+                        'name' => $subSubCategory['subsubcategorienaam'],
+                        'parent' => $parentCategory[0]->term_id,
                     ];
 
                     if (!$skipImages) {
@@ -124,14 +125,14 @@ class CategorySyncService implements Runnable
     {
         return get_terms(
             [
-            'taxonomy' => 'product_cat',
-            'hide_empty' => false,
-            'meta_query' => [
-                [
-                    'key' => 'external_id',
-                    'value' => $externalId,
+                'taxonomy' => 'product_cat',
+                'hide_empty' => false,
+                'meta_query' => [
+                    [
+                        'key' => 'external_id',
+                        'value' => $externalId,
+                    ],
                 ],
-            ],
             ]
         );
     }
@@ -165,12 +166,12 @@ class CategorySyncService implements Runnable
 
         $image = new Media(
             [
-            'url' => $this->api->{$endpoints[$depth]['name'] . 'ImageEndpoint'}($category['id']),
-            'filestream' => $imageResponse->getBody()->getContents(),
-            'filename' => $filename,
-            'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
-            'date_modified' => $category['afbeeldingLaatstGewijzigdOp'],
-            'group' => 'synced_images'
+                'url' => $this->api->{$endpoints[$depth]['name'] . 'ImageEndpoint'}($category['id']),
+                'filestream' => $imageResponse->getBody()->getContents(),
+                'filename' => $filename,
+                'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
+                'date_modified' => $category['afbeeldingLaatstGewijzigdOp'],
+                'group' => 'synced_images'
             ]
         );
 

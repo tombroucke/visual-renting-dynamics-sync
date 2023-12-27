@@ -31,45 +31,45 @@ class ArticleSyncService implements Runnable
             ->each(
                 function ($article) use ($syncer, $assocArgs) {
                     $args = [
-                    'post_title' => $article['omschrijving'],
-                    'post_content' => $article['omschrijvingUitgebreid'],
-                    'meta_input' => [
-                        'short_description_internet' => $article['informatieInternetKort'],
-                        'description_internet' => $article['informatieInternet'],
-                        'category_id' => $article['categorieId'],
-                        'subcategory_id' => $article['subcategorieId'],
-                        'subsubcategory_id' => $article['subsubcategorieId'],
-                        'kind' => $article['soort'],
-                        'diameter' => $article['diameter'],
-                        'content' => $article['inhoud'],
-                        'sizeTransport' => $article['omvangTransport'],
-                        'color' => $article['kleur'],
-                        'unit' => $article['eenheid'],
-                        'vatPercentage' => $article['btwPercentage'],
-                        'priceOnRequest' => $article['prijsOpAanvraagInternet'],
-                        'publishInternet' => $article['publicerenInternet'],
-                        'is_article_set' => $article['isArtikelset'],
-                        'is_accessory' => $article['isToebehoren'],
-                        'is_separately_available' => $article['isLosLeverbaar'],
-                        'alternatives' => [],
-                        'relations' => [],
-                        'rental_prices' => $article['verhuurprijzenOverige'],
-                        'setcomponents' => $article['setcomponenten'],
-                        'accessories' => $article['toebehoren'],
-                        'tags' => []
-                    ],
-                    'woocommerce' => [
-                        'product_type' => 'rental',
+                        'post_title' => $article['omschrijving'],
+                        'post_content' => $article['omschrijvingUitgebreid'],
                         'meta_input' => [
-                            '_sku' => $article['artikelcode'],
-                            '_price' => $article['prijs'],
-                            '_regular_price' => $article['prijs'],
-                            '_length' => $article['lengte'],
-                            '_width' => $article['breedte'],
-                            '_height' => $article['hoogte'],
-                            '_weight' => $article['gewicht'],
+                            'short_description_internet' => $article['informatieInternetKort'],
+                            'description_internet' => $article['informatieInternet'],
+                            'category_id' => $article['categorieId'],
+                            'subcategory_id' => $article['subcategorieId'],
+                            'subsubcategory_id' => $article['subsubcategorieId'],
+                            'kind' => $article['soort'],
+                            'diameter' => $article['diameter'],
+                            'content' => $article['inhoud'],
+                            'sizeTransport' => $article['omvangTransport'],
+                            'color' => $article['kleur'],
+                            'unit' => $article['eenheid'],
+                            'vatPercentage' => $article['btwPercentage'],
+                            'priceOnRequest' => $article['prijsOpAanvraagInternet'],
+                            'publishInternet' => $article['publicerenInternet'],
+                            'is_article_set' => $article['isArtikelset'],
+                            'is_accessory' => $article['isToebehoren'],
+                            'is_separately_available' => $article['isLosLeverbaar'],
+                            'alternatives' => [],
+                            'relations' => [],
+                            'rental_prices' => $article['verhuurprijzenOverige'],
+                            'setcomponents' => $article['setcomponenten'],
+                            'accessories' => $article['toebehoren'],
+                            'tags' => []
                         ],
-                    ],
+                        'woocommerce' => [
+                            'product_type' => 'rental',
+                            'meta_input' => [
+                                '_sku' => $article['artikelcode'],
+                                '_price' => $article['prijs'],
+                                '_regular_price' => $article['prijs'],
+                                '_length' => $article['lengte'],
+                                '_width' => $article['breedte'],
+                                '_height' => $article['hoogte'],
+                                '_weight' => $article['gewicht'],
+                            ],
+                        ],
                     ];
 
                     collect($article['alternatieven'])
@@ -98,9 +98,9 @@ class ArticleSyncService implements Runnable
                     if (!$assocArgs['skip-images']) {
                         collect(
                             [
-                            'bevatAfbeelding1',
-                            'bevatAfbeelding2',
-                            'bevatAfbeelding3',
+                                'bevatAfbeelding1',
+                                'bevatAfbeelding2',
+                                'bevatAfbeelding3',
                             ]
                         )->filter(
                             function ($imageKey) use ($article) {
@@ -113,12 +113,12 @@ class ArticleSyncService implements Runnable
                                 $filename = str_replace("\"", "", explode('filename=', $contentDisposition[0])[1]);
     
                                 $media[] = [
-                                'url' => $this->api->articleImageEndpoint($article['artikelcode'], $key),
-                                'filestream' => $imageResponse->getBody()->getContents(),
-                                'filename' => $filename,
-                                'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
-                                'date_modified' => $article['afbeelding' . $key . 'LaatstGewijzigdOp'],
-                                'group'  => 'synced_images'
+                                    'url' => $this->api->articleImageEndpoint($article['artikelcode'], $key),
+                                    'filestream' => $imageResponse->getBody()->getContents(),
+                                    'filename' => $filename,
+                                    'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
+                                    'date_modified' => $article['afbeelding' . $key . 'LaatstGewijzigdOp'],
+                                    'group'  => 'synced_images'
                                 ];
                             }
                         );
@@ -138,12 +138,12 @@ class ArticleSyncService implements Runnable
                                 $filename = $document['bestandsnaam'];
 
                                 $media[] = [
-                                'url' => $this->api->articleDocumentEndpoint($document['artikelcode'], $document['id']),
-                                'filestream' => $documentResponse->getBody()->getContents(),
-                                'filename' => $filename,
-                                'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
-                                'date_modified' => $document['bestandLaatstGewijzigdOp'],
-                                'group'  => 'synced_documents'
+                                    'url' => $this->api->articleDocumentEndpoint($document['artikelcode'], $document['id']),
+                                    'filestream' => $documentResponse->getBody()->getContents(),
+                                    'filename' => $filename,
+                                    'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
+                                    'date_modified' => $document['bestandLaatstGewijzigdOp'],
+                                    'group'  => 'synced_documents'
                                 ];
                             }
                         );
@@ -151,9 +151,9 @@ class ArticleSyncService implements Runnable
                     $args['media'] = $media;
     
                     $existingPostQuery = [
-                    'by'    => 'meta_value',
-                    'key'   => '_sku',
-                    'value' => $article['artikelcode'],
+                        'by'    => 'meta_value',
+                        'key'   => '_sku',
+                        'value' => $article['artikelcode'],
                     ];
                 
                     $syncer->addProduct($args, $existingPostQuery);
@@ -175,13 +175,11 @@ class ArticleSyncService implements Runnable
                 }
             }
 
-            $categoryKeys = array_reverse(
-                [
+            $categoryKeys = array_reverse([
                 'categoryId' => 'category',
                 'subcategoryId' => 'subcategory',
                 'subsubcategoryId' => 'subsubcategory',
-                ]
-            );
+            ]);
 
             $categoryId = null;
             $prefix = null;

@@ -148,8 +148,8 @@ class Api
                 'POST',
                 $this->url($endpoint),
                 [
-                'headers' => $this->headers(),
-                'json' => $params,
+                    'headers' => $this->headers(),
+                    'json' => $params,
                 ]
             );
         } catch (RequestException $e) {

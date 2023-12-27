@@ -4,8 +4,9 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Otomaties\VisualRentingDynamicsSync\Api;
 use Otomaties\VisualRentingDynamicsSync\Plugin;
-use Otomaties\VisualRentingDynamicsSync\Admin\Settings;
 use Otomaties\VisualRentingDynamicsSync\Helpers\View;
+use Otomaties\VisualRentingDynamicsSync\Admin\Settings;
+use Otomaties\VisualRentingDynamicsSync\Helpers\Assets;
 
 /*
  * Plugin Name:       Visual Renting Dynamics Sync
@@ -66,9 +67,22 @@ add_action('visual_renting_dynamics_sync', function ($plugin) {
         return new Api($apiKey, $client, $logger);
     });
 
-    $plugin->bind(View::class, function ($plugin, $args) {
+    $plugin->singleton(View::class, function ($plugin, $args) {
         $path = plugin_dir_path(__FILE__) . 'resources/views/';
         return new View($path);
+    });
+
+    $plugin->singleton(Assets::class, function ($plugin, $args) {
+        $path = plugin_dir_path(__FILE__);
+        return new Assets($path);
+    });
+
+    $plugin->singleton('custom-checkout-fields', function ($plugin, $args) {
+        return [
+            'vrd_shipping_method' => __('Shipping method', 'visual-renting-dynamics-sync'),
+            'vrd_shipping_date' => __('Shipping date', 'visual-renting-dynamics-sync'),
+            'vrd_return_date' => __('Return date', 'visual-renting-dynamics-sync'),
+        ];
     });
 });
 
