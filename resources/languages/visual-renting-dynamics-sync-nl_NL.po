@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Visual Renting Dynamics Sync\n"
-"POT-Creation-Date: 2023-12-26 22:12+0100\n"
-"PO-Revision-Date: 2023-12-26 22:13+0100\n"
+"POT-Creation-Date: 2023-12-28 10:00+0100\n"
+"PO-Revision-Date: 2023-12-28 10:04+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -15,50 +15,206 @@ msgstr ""
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: visual-renting-dynamics-sync.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 "X-Poedit-SearchPathExcluded-1: vendor\n"
 
-#: app/Plugin.php:30
+#: app/Plugin.php:43 app/WooCommerce/Emails/CustomerQuoteRequested.php:13
+#: app/WooCommerce/Emails/CustomerQuoteRequested.php:15
+#: app/WooCommerce/Emails/CustomerQuoteRequested.php:16
 msgid "Quote requested"
 msgstr "Offerte aangevraagd"
 
-#: app/Plugin.php:52
+#: app/Plugin.php:47 app/WooCommerce/Emails/QuoteFailed.php:11
+msgid "Quote request failed"
+msgstr "Offerteaanvraag mislukt"
+
+#: app/Plugin.php:102
 msgid "Rental"
 msgstr "Verhuur"
 
-#: app/WooCommerce/Checkout.php:23
-msgid "Shipping method"
-msgstr "Verzendmethode"
+#. translators: %s: error message
+#: app/WooCommerce/Checkout.php:113
+#, php-format
+msgid "Error requesting quote: %s"
+msgstr "Fout bij het aanvragen van een offerte: %s"
 
-#: app/WooCommerce/Checkout.php:24 resources/views/checkout/fields.php:24
-msgid "Shipping date"
-msgstr "Leverdatum"
-
-#: app/WooCommerce/Checkout.php:25 resources/views/checkout/fields.php:35
-msgid "Return date"
-msgstr "Retour datum"
-
-#: app/WooCommerce/Checkout.php:99
+#: app/WooCommerce/Checkout.php:131
+#: app/WooCommerce/Emails/CustomerQuoteRequested.php:47
 msgid "Thank you for your quote request"
-msgstr "Bedankt voor uw offerte aanvraag"
+msgstr "Bedankt voor je offerteaanvraag"
 
-#: app/WooCommerce/Checkout.php:108
-msgid "We have received your quote request. We will contact you as soon as possible."
-msgstr "We hebben uw offerteaanvraag ontvangen. We nemen zo snel mogelijk contact met u op."
+#: app/WooCommerce/Checkout.php:135
+msgid "Something went wrong."
+msgstr "Er ging iets mis."
 
-#: app/WooCommerce/Checkout.php:117
+#: app/WooCommerce/Checkout.php:144
+msgid ""
+"We have received your quote request. We will contact you as soon as possible."
+msgstr ""
+"We hebben je offerteaanvraag ontvangen. We nemen zo snel mogelijk contact "
+"met je op."
+
+#: app/WooCommerce/Checkout.php:148
+msgid "Something went wrong during your quote request. Please contact us."
+msgstr ""
+"Er is iets misgegaan tijdens je offerteaanvraag. Gelieve contact met ons op "
+"te nemen."
+
+#: app/WooCommerce/Checkout.php:161
 msgid "Your quote request is being processed"
-msgstr "Uw offerteaanvraag wordt verwerkt"
+msgstr "Je offerteaanvraag wordt verwerkt"
 
-#: app/WooCommerce/Checkout.php:122
+#: app/WooCommerce/Checkout.php:166
 msgid "Request quote"
 msgstr "Offerte aanvragen"
 
-#: app/WooCommerce/Checkout.php:136
+#: app/WooCommerce/Checkout.php:180
 msgid "is a required field."
 msgstr "is een verplicht veld."
+
+#: app/WooCommerce/Checkout.php:189
+msgid "Return date must be after shipping date."
+msgstr "De retourdatum moet na de leverdatum liggen."
+
+#: app/WooCommerce/Checkout.php:195
+msgid "Name must be less than 150 characters."
+msgstr "Je naam moet mag uit maximum 150 karakters bestaan."
+
+#: app/WooCommerce/Emails/CustomerQuoteRequested.php:14
+msgid ""
+"This is a quote request notification sent to customers containing order "
+"details."
+msgstr ""
+"Dit is een melding voor offerteaanvragen die naar klanten wordt gestuurd met "
+"de gegevens van de bestelling."
+
+#: app/WooCommerce/Emails/CustomerQuoteRequested.php:37
+msgid "We received your quote request!"
+msgstr "We hebben je offerteaanvraag ontvangen"
+
+#: app/WooCommerce/Emails/CustomerQuoteRequested.php:116
+msgid "Thanks for using {site_url}!"
+msgstr "Bedankt dat je {site_url} gebruikt!"
+
+#: app/WooCommerce/Emails/QuoteFailed.php:12
+msgid ""
+"When an order failed to be sent to Visual Renting Dynamics Sync, this e-mail "
+"is sent to the shop administrator."
+msgstr ""
+"Wanneer een bestelling niet naar Visual Renting Dynamics Sync is verzonden, "
+"wordt deze e-mail naar de winkelmanager gestuurd."
+
+#: app/WooCommerce/Emails/QuoteFailed.php:13
+#: app/WooCommerce/Emails/QuoteFailed.php:14
+msgid "Failed quote request"
+msgstr "Mislukte offerteaanvraag"
+
+#: app/WooCommerce/Emails/QuoteFailed.php:37
+msgid "[{site_title}]: Quote request failed #{order_number}"
+msgstr "[{site_title}]: Offerteaanvraag mislukt #{order_number}"
+
+#: app/WooCommerce/Emails/QuoteFailed.php:47
+msgid "Failed quote request: #{order_number}"
+msgstr "Mislukte offerteaanvraag: #{order_number}"
+
+#: app/WooCommerce/Emails/QuoteFailed.php:125
+msgid "Something went wrong during a quote request"
+msgstr "Er ging iets mis tijdens de offerteaanvraag"
+
+#. translators: %s: list of placeholders
+#: app/WooCommerce/Emails/QuoteFailed.php:150
+#: app/WooCommerce/Emails/QuoteRequested.php:150
+#, php-format
+msgid "Available placeholders: %s"
+msgstr "Beschikbare placeholders: %s"
+
+#: app/WooCommerce/Emails/QuoteFailed.php:153
+#: app/WooCommerce/Emails/QuoteRequested.php:153
+msgid "Enable/Disable"
+msgstr "Inschakelen/Uitschakelen"
+
+#: app/WooCommerce/Emails/QuoteFailed.php:155
+#: app/WooCommerce/Emails/QuoteRequested.php:155
+msgid "Enable this email notification"
+msgstr "Deze e-mailnotificatie inschakelen"
+
+#: app/WooCommerce/Emails/QuoteFailed.php:159
+#: app/WooCommerce/Emails/QuoteRequested.php:159
+msgid "Recipient(s)"
+msgstr "Ontvanger(s)"
+
+#. translators: %s: WP admin email
+#: app/WooCommerce/Emails/QuoteFailed.php:162
+#: app/WooCommerce/Emails/QuoteRequested.php:162
+#, php-format
+msgid "Enter recipients (comma separated) for this email. Defaults to %s."
+msgstr ""
+"Vul ontvangers in voor deze mail (komma gescheiden). Standaard naar %s."
+
+#: app/WooCommerce/Emails/QuoteFailed.php:168
+#: app/WooCommerce/Emails/QuoteRequested.php:168
+msgid "Subject"
+msgstr "Onderwerp"
+
+#: app/WooCommerce/Emails/QuoteFailed.php:176
+#: app/WooCommerce/Emails/QuoteRequested.php:176
+msgid "Email heading"
+msgstr "E-mail kop"
+
+#: app/WooCommerce/Emails/QuoteFailed.php:184
+#: app/WooCommerce/Emails/QuoteRequested.php:184
+msgid "Additional content"
+msgstr "Aanvullende inhoud"
+
+#: app/WooCommerce/Emails/QuoteFailed.php:185
+#: app/WooCommerce/Emails/QuoteRequested.php:185
+msgid "Text to appear below the main email content."
+msgstr "Tekst verschijnt onder de hoofdinhoud van de e-mail."
+
+#: app/WooCommerce/Emails/QuoteFailed.php:187
+#: app/WooCommerce/Emails/QuoteRequested.php:187
+msgid "N/A"
+msgstr "Niet beschikbaar"
+
+#: app/WooCommerce/Emails/QuoteFailed.php:193
+#: app/WooCommerce/Emails/QuoteRequested.php:193
+msgid "Email type"
+msgstr "E-mail type"
+
+#: app/WooCommerce/Emails/QuoteFailed.php:195
+#: app/WooCommerce/Emails/QuoteRequested.php:195
+msgid "Choose which format of email to send."
+msgstr "Kies de te versturen e-mailindeling."
+
+#: app/WooCommerce/Emails/QuoteRequested.php:11
+#: app/WooCommerce/Emails/QuoteRequested.php:13
+#: app/WooCommerce/Emails/QuoteRequested.php:14
+msgid "New quote request"
+msgstr "Nieuwe offerteaanvraag"
+
+#: app/WooCommerce/Emails/QuoteRequested.php:12
+msgid ""
+"When an order is successfully sent to Visual Renting Dynamics Sync, this e-"
+"mail is sent to the shop administrator."
+msgstr ""
+"Wanneer een bestelling succesvol naar Visual Renting Dynamics Sync is "
+"verzonden, wordt deze e-mail naar de winkelmanager gestuurd."
+
+#: app/WooCommerce/Emails/QuoteRequested.php:37
+msgid "[{site_title}]: New quote request #{order_number}"
+msgstr "[{site_title}]: Nieuwe offerteaanvraag #{order_number}"
+
+#: app/WooCommerce/Emails/QuoteRequested.php:47
+msgid "New quote request: #{order_number}"
+msgstr "Nieuwe offerteaanvraag: #{order_number}"
+
+#: app/WooCommerce/Emails/QuoteRequested.php:125
+msgid "Congratulations on the quote request."
+msgstr "Gefeliciteerd met de offerteaanvraag."
 
 #: app/WooCommerce/Product.php:27
 #: resources/views/single-product/tabs/documents.php:1
@@ -72,7 +228,7 @@ msgid_plural "%s <span class=\"count\">(%s)</span>"
 msgstr[0] "%s <span class=\"count\">(%s)</span>"
 msgstr[1] "%s <span class=\"count\">(%s)</span>"
 
-#: app/WooCommerce/StatusRegistrar.php:39
+#: app/WooCommerce/StatusRegistrar.php:45
 #, php-format
 msgid "Change status to %s"
 msgstr "Status wijzigen naar %s"
@@ -92,6 +248,18 @@ msgstr "Levering"
 #: resources/views/checkout/fields.php:13
 msgid "Pickup"
 msgstr "Ophalen"
+
+#: resources/views/checkout/fields.php:24 visual-renting-dynamics-sync.php:83
+msgid "Shipping date"
+msgstr "Leverdatum"
+
+#: resources/views/checkout/fields.php:35 visual-renting-dynamics-sync.php:84
+msgid "Return date"
+msgstr "Retour datum"
+
+#: visual-renting-dynamics-sync.php:82
+msgid "Shipping method"
+msgstr "Verzendmethode"
 
 #. Plugin Name of the plugin/theme
 msgid "Visual Renting Dynamics Sync"
