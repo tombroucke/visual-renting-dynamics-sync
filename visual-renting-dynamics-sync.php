@@ -61,7 +61,7 @@ add_action('visual_renting_dynamics_sync', function ($plugin) {
     });
 
     $plugin->singleton(Api::class, function ($plugin, $args) {
-        $apiKey = $plugin->make(Settings::class)->get('api_key');
+        $apiKey = $plugin->make(Settings::class)->get('api_key') ?? '';
         $logger = $plugin->make(Logger::class);
         $client = $plugin->make(\GuzzleHttp\Client::class);
         return new Api($apiKey, $client, $logger);
