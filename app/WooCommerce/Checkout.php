@@ -36,7 +36,6 @@ class Checkout
         add_filter('woocommerce_email_heading_customer_processing_order', [$this, 'orderProcessingEmailHeading'], 10, 2); // phpcs:ignore Generic.Files.LineLength.TooLong
         add_filter('woocommerce_order_button_text', [$this, 'orderButtonText']);
 
-
         return $this;
     }
 
@@ -45,12 +44,16 @@ class Checkout
             return;
         }
         
-        foreach ($this->assets->entrypoints()->checkout->js as $js) {
-            wp_enqueue_script('vrd-checkout-' . $js, $this->assets->url($js), [], null, true);
+        if (property_exists($this->assets->entrypoints()->checkout, 'js')) {
+            foreach ($this->assets->entrypoints()->checkout->js as $js) {
+                wp_enqueue_script('vrd-checkout-' . $js, $this->assets->url($js), [], null, true);
+            }
         }
         
-        foreach ($this->assets->entrypoints()->checkout->css as $css) {
-            wp_enqueue_style('vrd-checkout-' . $css, $this->assets->url($css), [], null);
+        if (property_exists($this->assets->entrypoints()->checkout, 'css')) {
+            foreach ($this->assets->entrypoints()->checkout->css as $css) {
+                wp_enqueue_style('vrd-checkout-' . $css, $this->assets->url($css), [], null);
+            }
         }
     }
 

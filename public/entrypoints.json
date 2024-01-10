@@ -1,8 +1,8 @@
 {
   "checkout": {
     "js": [
-      "js/runtime.05fb93.js",
-      "js/checkout.9b6afc.js"
+      "js/runtime.a686f0.js",
+      "js/checkout.b31142.js"
     ],
     "css": [
       "css/checkout.62b421.css"
@@ -11,7 +11,7 @@
   },
   "admin": {
     "js": [
-      "js/runtime.05fb93.js"
+      "js/runtime.a686f0.js"
     ],
     "css": [
       "css/admin.409ac3.css"
