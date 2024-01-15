@@ -1,11 +1,11 @@
-<h3><?php _e('Shipping', 'visual-renting-dynamics-sync'); ?></h3>
+<h3><?php _e('Delivery or pickup', 'visual-renting-dynamics-sync'); ?></h3>
 <div class="vrd-fields__field-wrapper">
     <?php
         woocommerce_form_field(
             'vrd_shipping_method',
             [
                 'type' => 'select',
-                'label' => __('Shipping', 'visual-renting-dynamics-sync'),
+                'label' => __('Delivery or pickup', 'visual-renting-dynamics-sync'),
                 'required' => true,
                 'options' => [
                     '' => __('Choose an option', 'woocommerce'),
@@ -21,7 +21,7 @@
             'vrd_shipping_date',
             [
                 'type' => 'date',
-                'label' => __('Shipping date', 'visual-renting-dynamics-sync'),
+                'label' => __('Date', 'visual-renting-dynamics-sync'),
                 'required' => true,
                 'input_class' => ['form-control'],
                 'default' => WC()->session->get('vrd_shipping_date'),

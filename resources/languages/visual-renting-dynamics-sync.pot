@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Visual Renting Dynamics Sync\n"
-"POT-Creation-Date: 2023-12-28 10:00+0100\n"
+"POT-Creation-Date: 2024-01-15 09:00+0100\n"
 "PO-Revision-Date: 2023-12-28 09:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -36,46 +36,46 @@ msgid "Rental"
 msgstr ""
 
 #. translators: %s: error message
-#: app/WooCommerce/Checkout.php:113
+#: app/WooCommerce/Checkout.php:116
 #, php-format
 msgid "Error requesting quote: %s"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:131
+#: app/WooCommerce/Checkout.php:134
 #: app/WooCommerce/Emails/CustomerQuoteRequested.php:47
 msgid "Thank you for your quote request"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:135
+#: app/WooCommerce/Checkout.php:138
 msgid "Something went wrong."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:144
+#: app/WooCommerce/Checkout.php:147
 msgid ""
 "We have received your quote request. We will contact you as soon as possible."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:148
+#: app/WooCommerce/Checkout.php:151
 msgid "Something went wrong during your quote request. Please contact us."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:161
+#: app/WooCommerce/Checkout.php:164
 msgid "Your quote request is being processed"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:166
+#: app/WooCommerce/Checkout.php:169
 msgid "Request quote"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:180
+#: app/WooCommerce/Checkout.php:183
 msgid "is a required field."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:189
+#: app/WooCommerce/Checkout.php:192
 msgid "Return date must be after shipping date."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:195
+#: app/WooCommerce/Checkout.php:198
 msgid "Name must be less than 150 characters."
 msgstr ""
 
@@ -222,7 +222,7 @@ msgid "Change status to %s"
 msgstr ""
 
 #: resources/views/checkout/fields.php:1 resources/views/checkout/fields.php:8
-msgid "Shipping"
+msgid "Delivery or pickup"
 msgstr ""
 
 #: resources/views/checkout/fields.php:11
@@ -237,8 +237,8 @@ msgstr ""
 msgid "Pickup"
 msgstr ""
 
-#: resources/views/checkout/fields.php:24 visual-renting-dynamics-sync.php:83
-msgid "Shipping date"
+#: resources/views/checkout/fields.php:24
+msgid "Date"
 msgstr ""
 
 #: resources/views/checkout/fields.php:35 visual-renting-dynamics-sync.php:84
@@ -247,6 +247,10 @@ msgstr ""
 
 #: visual-renting-dynamics-sync.php:82
 msgid "Shipping method"
+msgstr ""
+
+#: visual-renting-dynamics-sync.php:83
+msgid "Shipping date"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
