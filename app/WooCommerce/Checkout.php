@@ -5,28 +5,28 @@ namespace Otomaties\VisualRentingDynamicsSync\WooCommerce;
 use Otomaties\VisualRentingDynamicsSync\Api;
 use Otomaties\VisualRentingDynamicsSync\Helpers\View;
 use Otomaties\VisualRentingDynamicsSync\Helpers\Assets;
+use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout\VatNumber;
+use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout\VrdFields;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\RentalProduct;
 
 class Checkout
 {
-
     public function __construct(
         private Api $api,
         private Cart $cart,
         private Assets $assets
     ) {
+        collect([
+            VatNumber::class,
+            VrdFields::class,
+        ])
+            ->map(fn ($class) => new $class())
+            ->each(fn ($class) => $class->runHooks());
     }
 
     public function runHooks() : self
-    {        
+    {
         add_action('wp_enqueue_scripts', [$this, 'enqueueScripts'], 999);
-        
-        add_filter('woocommerce_checkout_posted_data', [$this, 'addCustomFieldsToPostedData']);
-        add_action('woocommerce_checkout_before_order_review_heading', [$this, 'addCustomFields']);
-        add_action('woocommerce_checkout_process', [$this, 'validateCustomFields']);
-        add_action('woocommerce_checkout_process', [$this, 'temporarilySaveCustomFields']);
-        add_action('woocommerce_checkout_order_processed', [$this, 'removeTemporarilySavedCustomFields'], 999);
-        add_action('woocommerce_checkout_update_order_meta', [$this, 'saveCustomFields']);
 
         add_filter('woocommerce_valid_order_statuses_for_payment_complete', [$this, 'removeFailedFromValidOrderStatusesForPaymentComplete']);
         add_filter('woocommerce_checkout_order_processed', [$this, 'requestOrder'], 9999, 3);
@@ -35,6 +35,7 @@ class Checkout
         add_filter('woocommerce_thankyou_order_received_text', [$this, 'orderReceivedText'], 10, 2);
         add_filter('woocommerce_email_heading_customer_processing_order', [$this, 'orderProcessingEmailHeading'], 10, 2); // phpcs:ignore Generic.Files.LineLength.TooLong
         add_filter('woocommerce_order_button_text', [$this, 'orderButtonText']);
+        add_filter('woocommerce_cart_needs_shipping_address', '__return_true');
 
         return $this;
     }
@@ -57,17 +58,6 @@ class Checkout
         }
     }
 
-    public function addCustomFieldsToPostedData(array $postedData) : array
-    {
-        foreach (visualRentingDynamicSync()->make('custom-checkout-fields') as $field => $label) {
-            if (!empty($_POST[$field])) {
-                $postedData[$field] = sanitize_text_field($_POST[$field]);
-            }
-        }
-
-        return $postedData;
-    }
-
     public function removeFailedFromValidOrderStatusesForPaymentComplete(array $statuses) : array
     {
         return array_diff($statuses, ['failed']);
@@ -78,20 +68,43 @@ class Checkout
         $shippingDate = \DateTime::createFromFormat('Y-m-d', $postedData['vrd_shipping_date']);
         $returnDate = \DateTime::createFromFormat('Y-m-d', $postedData['vrd_return_date']);
 
+        $isDelivery = $order->get_meta('vrd_shipping_method') === 'delivery';
+        $name = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
+
+        if ($order->get_billing_company()) {
+            $name = sprintf(
+                __('%s attn. %s', 'visual-renting-dynamics-sync'),
+                $order->get_billing_company(),
+                $name
+            );
+        }
+        
         $args = [
-            'naam' => $postedData['billing_first_name'] . ' ' . $postedData['billing_last_name'],
-            'adres' => $postedData['billing_address_1'] . ' ' . $postedData['billing_address_2'],
-            'postcode' => $postedData['billing_postcode'],
-            'plaats' => $postedData['billing_city'],
-            'telefoonMobiel' => $postedData['billing_phone'],
-            'email' => $postedData['billing_email'],
-            'memo' => $postedData['order_comments'],
+            'naam' => $name,
+            'adres' => $order->get_billing_address_1() . ' ' . $order->get_billing_address_2(),
+            'postcode' => $order->get_billing_postcode(),
+            'plaats' => $order->get_billing_city(),
+            'land' => $order->get_billing_country(),
+            'telefoonMobiel' => $order->get_billing_phone(),
+            'email' => $order->get_billing_email(),
+            'memo' => $order->get_customer_note(),
             'leveringDatumTijd' => $shippingDate ? $shippingDate->format('Y-m-d\TH:i') : null,
-            'afleveren' => $postedData['vrd_shipping_method'] === 'delivery',
+            'afleveren' => $isDelivery,
             'retourneringDatumTijd' => $returnDate ? $returnDate->format('Y-m-d\TH:i') : null,
-            'ophalen' => $postedData['vrd_shipping_method'] === 'delivery',
+            'ophalen' => $isDelivery,
             'artikelen' => [],
         ];
+
+        if ($order->get_meta('_billing_vat_number')) {
+            $args['btwNummer'] = $order->get_meta('_billing_vat_number');
+        }
+
+        if ($isDelivery) {
+            $args['adresLevering'] = $order->get_shipping_address_1() . ' ' . $order->get_shipping_address_2();
+            $args['postcodeLevering'] = $order->get_shipping_postcode();
+            $args['plaatsLevering'] = $order->get_shipping_city();
+            $args['landLevering'] = $order->get_shipping_country();
+        }
         
         foreach ($order->get_items() as $item) {
             $product = $item->get_product();
@@ -103,8 +116,9 @@ class Checkout
                 ];
             }
         }
+        
         try {
-            $response = $this->api->requestOrder($args);
+            $response = $this->api->requestOrder(apply_filters('visual_renting_dynamics_orderaanvraag_args', $args));
             if ($response->getStatusCode() === 200) {
                 $order->update_status('wc-quote-requested');
             }
@@ -167,63 +181,5 @@ class Checkout
     public function orderButtonText(string $text) : string
     {
         return $this->cart->onlyRentalProductsInCart() ? __('Request quote', 'visual-renting-dynamics-sync') : $text;
-    }
-
-    public function addCustomFields()
-    {
-        visualRentingDynamicSync()
-            ->make(View::class)
-            ->render('checkout/fields');
-    }
-
-    public function validateCustomFields()
-    {
-        foreach (visualRentingDynamicSync()->make('custom-checkout-fields') as $field => $label) {
-            if (empty($_POST[$field])) {
-                $notice = '<strong>' . $label . '</strong> ' . __('is a required field.', 'visual-renting-dynamics-sync'); // phpcs:ignore Generic.Files.LineLength.TooLong
-                wc_add_notice($notice, 'error');
-            }
-        }
-        
-        if (isset($_POST['vrd_shipping_date']) && isset($_POST['vrd_return_date'])) {
-            $shippingDate = \DateTime::createFromFormat('Y-m-d', $_POST['vrd_shipping_date']);
-            $returnDate = \DateTime::createFromFormat('Y-m-d', $_POST['vrd_return_date']);
-            if ($shippingDate >= $returnDate) {
-                $notice = __('Return date must be after shipping date.', 'visual-renting-dynamics-sync');
-                wc_add_notice($notice, 'error');
-            }
-        }
-
-        if (strlen($_POST['billing_first_name'] . ' ' . $_POST['billing_last_name']) >= 150) {
-            $notice = __('Name must be less than 150 characters.', 'visual-renting-dynamics-sync');
-            wc_add_notice($notice, 'error');
-        }
-    }
-
-    public function temporarilySaveCustomFields()
-    {
-        foreach (visualRentingDynamicSync()->make('custom-checkout-fields') as $field => $label) {
-            if (!empty($_POST[$field])) {
-                WC()->session->set($field, sanitize_text_field($_POST[$field]));
-            }
-        }
-    }
-
-    public function removeTemporarilySavedCustomFields()
-    {
-        foreach (visualRentingDynamicSync()->make('custom-checkout-fields') as $field => $label) {
-            WC()->session->__unset($field);
-        }
-    }
-
-    public function saveCustomFields(int $orderId) : void
-    {
-        $order = wc_get_order($orderId);
-        foreach (visualRentingDynamicSync()->make('custom-checkout-fields') as $field => $label) {
-            if (!empty($_POST[$field])) {
-                $order->update_meta_data($field, sanitize_text_field($_POST[$field]));
-                $order->save();
-            }
-        }
     }
 }

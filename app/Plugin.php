@@ -8,6 +8,7 @@ use Otomaties\VisualRentingDynamicsSync\Admin\Admin;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\Cart;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\Product;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout;
+use Otomaties\VisualRentingDynamicsSync\WooCommerce\Account;
 use Otomaties\VisualRentingDynamicsSync\Command\CommandRegistrar;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\RentalProduct;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\StatusRegistrar;
@@ -37,15 +38,17 @@ class Plugin extends Container
 
     public function initWoocommerce(): void
     {
-        (new StatusRegistrar())
-            ->add(
-                'wc-quote-requested',
-                ['label' => __('Quote requested', 'visual-renting-dynamics-sync')]
-            )
-            ->add(
-                'wc-quote-failed',
-                ['label' => __('Quote request failed', 'visual-renting-dynamics-sync')]
-            );
+        add_action('init', function () {
+            (new StatusRegistrar())
+                ->add(
+                    'wc-quote-requested',
+                    ['label' => __('Quote requested', 'visual-renting-dynamics-sync')]
+                )
+                ->add(
+                    'wc-quote-failed',
+                    ['label' => __('Quote request failed', 'visual-renting-dynamics-sync')]
+                );
+        });
 
         $this->bind(Cart::class, function () {
             return new Cart(WC()->cart);
@@ -54,13 +57,15 @@ class Plugin extends Container
         $this->addRentalProductType();
 
         collect([
-                Cart::class,
-                Checkout::class,
-                Product::class,
-                Admin::class
-            ])
+            Cart::class,
+            Checkout::class,
+            Product::class,
+            Admin::class,
+            Account::class
+        ])
+            ->map(fn ($class) => $this->make($class))
             ->each(function ($class) {
-                $this->make($class)->runHooks();
+                $class->runHooks();
             });
         
 

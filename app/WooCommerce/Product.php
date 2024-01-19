@@ -9,6 +9,7 @@ class Product
     public function runHooks() : self
     {
         add_filter('woocommerce_product_tabs', [$this, 'addDocumentTab']);
+        add_filter('woocommerce_product_single_add_to_cart_text', [$this, 'changeAddToCartText'], 10, 2);
         
         return $this;
     }
@@ -50,5 +51,13 @@ class Product
                     'documentIds' => $documentIds,
                 ]
             );
+    }
+
+    public function changeAddToCartText($text, $product)
+    {
+        if ($product->get_type()) {
+            $text = __('Add to quote request', 'visual-renting-dynamics-sync');
+        }
+        return $text;
     }
 }

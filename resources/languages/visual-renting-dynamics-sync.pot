@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Visual Renting Dynamics Sync\n"
-"POT-Creation-Date: 2024-01-15 09:00+0100\n"
+"POT-Creation-Date: 2024-01-19 13:16+0100\n"
 "PO-Revision-Date: 2023-12-28 09:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -21,18 +21,22 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
-#: app/Plugin.php:43 app/WooCommerce/Emails/CustomerQuoteRequested.php:13
+#: app/Plugin.php:44 app/WooCommerce/Emails/CustomerQuoteRequested.php:13
 #: app/WooCommerce/Emails/CustomerQuoteRequested.php:15
 #: app/WooCommerce/Emails/CustomerQuoteRequested.php:16
 msgid "Quote requested"
 msgstr ""
 
-#: app/Plugin.php:47 app/WooCommerce/Emails/QuoteFailed.php:11
+#: app/Plugin.php:48 app/WooCommerce/Emails/QuoteFailed.php:11
 msgid "Quote request failed"
 msgstr ""
 
-#: app/Plugin.php:102
+#: app/Plugin.php:104
 msgid "Rental"
+msgstr ""
+
+#: app/WooCommerce/Account.php:16
+msgid "Quote requests"
 msgstr ""
 
 #. translators: %s: error message
@@ -204,9 +208,13 @@ msgstr ""
 msgid "Congratulations on the quote request."
 msgstr ""
 
-#: app/WooCommerce/Product.php:27
+#: app/WooCommerce/Product.php:28
 #: resources/views/single-product/tabs/documents.php:1
 msgid "Documents"
+msgstr ""
+
+#: app/WooCommerce/Product.php:59
+msgid "Add to quote request"
 msgstr ""
 
 #: app/WooCommerce/StatusRegistrar.php:17
