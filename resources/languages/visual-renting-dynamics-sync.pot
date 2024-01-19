@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Visual Renting Dynamics Sync\n"
-"POT-Creation-Date: 2024-01-19 13:16+0100\n"
+"POT-Creation-Date: 2024-01-19 16:00+0100\n"
 "PO-Revision-Date: 2023-12-28 09:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -21,65 +21,78 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
-#: app/Plugin.php:44 app/WooCommerce/Emails/CustomerQuoteRequested.php:13
+#: app/Plugin.php:45 app/WooCommerce/Emails/CustomerQuoteRequested.php:13
 #: app/WooCommerce/Emails/CustomerQuoteRequested.php:15
 #: app/WooCommerce/Emails/CustomerQuoteRequested.php:16
 msgid "Quote requested"
 msgstr ""
 
-#: app/Plugin.php:48 app/WooCommerce/Emails/QuoteFailed.php:11
+#: app/Plugin.php:49 app/WooCommerce/Emails/QuoteFailed.php:11
 msgid "Quote request failed"
 msgstr ""
 
-#: app/Plugin.php:104
+#: app/Plugin.php:107
 msgid "Rental"
 msgstr ""
 
-#: app/WooCommerce/Account.php:16
+#: app/WooCommerce/Account.php:17
 msgid "Quote requests"
 msgstr ""
 
+#: app/WooCommerce/Checkout.php:76
+#, php-format
+msgid "%s attn. %s"
+msgstr ""
+
 #. translators: %s: error message
-#: app/WooCommerce/Checkout.php:116
+#: app/WooCommerce/Checkout.php:130
 #, php-format
 msgid "Error requesting quote: %s"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:134
+#: app/WooCommerce/Checkout.php:148
 #: app/WooCommerce/Emails/CustomerQuoteRequested.php:47
 msgid "Thank you for your quote request"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:138
+#: app/WooCommerce/Checkout.php:152
 msgid "Something went wrong."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:147
+#: app/WooCommerce/Checkout.php:161
 msgid ""
 "We have received your quote request. We will contact you as soon as possible."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:151
+#: app/WooCommerce/Checkout.php:165
 msgid "Something went wrong during your quote request. Please contact us."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:164
+#: app/WooCommerce/Checkout.php:178
 msgid "Your quote request is being processed"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:169
+#: app/WooCommerce/Checkout.php:183
 msgid "Request quote"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:183
+#: app/WooCommerce/Checkout/VatNumber.php:22
+msgid "VAT number"
+msgstr ""
+
+#: app/WooCommerce/Checkout/VatNumber.php:41
+msgid "This VAT number seems invalid"
+msgstr ""
+
+#: app/WooCommerce/Checkout/VrdFields.php:44
 msgid "is a required field."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:192
+#: app/WooCommerce/Checkout/VrdFields.php:53
 msgid "Return date must be after shipping date."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:198
+#: app/WooCommerce/Checkout/VrdFields.php:59
 msgid "Name must be less than 150 characters."
 msgstr ""
 
@@ -229,36 +242,32 @@ msgstr[1] ""
 msgid "Change status to %s"
 msgstr ""
 
-#: resources/views/checkout/fields.php:1 resources/views/checkout/fields.php:8
+#: resources/views/checkout/fields.php:1
 msgid "Delivery or pickup"
 msgstr ""
 
-#: resources/views/checkout/fields.php:11
-msgid "Choose an option"
-msgstr ""
-
-#: resources/views/checkout/fields.php:12
-msgid "Delivery"
-msgstr ""
-
-#: resources/views/checkout/fields.php:13
-msgid "Pickup"
-msgstr ""
-
-#: resources/views/checkout/fields.php:24
-msgid "Date"
-msgstr ""
-
-#: resources/views/checkout/fields.php:35 visual-renting-dynamics-sync.php:84
-msgid "Return date"
-msgstr ""
-
-#: visual-renting-dynamics-sync.php:82
+#: visual-renting-dynamics-sync.php:84
 msgid "Shipping method"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:83
+#: visual-renting-dynamics-sync.php:87
+msgid "Choose an option"
+msgstr ""
+
+#: visual-renting-dynamics-sync.php:88
+msgid "Delivery"
+msgstr ""
+
+#: visual-renting-dynamics-sync.php:89
+msgid "Pickup"
+msgstr ""
+
+#: visual-renting-dynamics-sync.php:96
 msgid "Shipping date"
+msgstr ""
+
+#: visual-renting-dynamics-sync.php:103
+msgid "Return date"
 msgstr ""
 
 #. Plugin Name of the plugin/theme

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Visual Renting Dynamics Sync\n"
-"POT-Creation-Date: 2024-01-19 13:16+0100\n"
-"PO-Revision-Date: 2024-01-19 13:18+0100\n"
+"POT-Creation-Date: 2024-01-19 16:00+0100\n"
+"PO-Revision-Date: 2024-01-19 16:01+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -22,69 +22,82 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 "X-Poedit-SearchPathExcluded-1: vendor\n"
 
-#: app/Plugin.php:44 app/WooCommerce/Emails/CustomerQuoteRequested.php:13
+#: app/Plugin.php:45 app/WooCommerce/Emails/CustomerQuoteRequested.php:13
 #: app/WooCommerce/Emails/CustomerQuoteRequested.php:15
 #: app/WooCommerce/Emails/CustomerQuoteRequested.php:16
 msgid "Quote requested"
 msgstr "Offerte aangevraagd"
 
-#: app/Plugin.php:48 app/WooCommerce/Emails/QuoteFailed.php:11
+#: app/Plugin.php:49 app/WooCommerce/Emails/QuoteFailed.php:11
 msgid "Quote request failed"
 msgstr "Offerteaanvraag mislukt"
 
-#: app/Plugin.php:104
+#: app/Plugin.php:107
 msgid "Rental"
 msgstr "Verhuur"
 
-#: app/WooCommerce/Account.php:16
+#: app/WooCommerce/Account.php:17
 msgid "Quote requests"
 msgstr "Offerteaanvragen"
 
+#: app/WooCommerce/Checkout.php:76
+#, php-format
+msgid "%s attn. %s"
+msgstr "%s tav. %s"
+
 #. translators: %s: error message
-#: app/WooCommerce/Checkout.php:116
+#: app/WooCommerce/Checkout.php:130
 #, php-format
 msgid "Error requesting quote: %s"
 msgstr "Fout bij het aanvragen van een offerte: %s"
 
-#: app/WooCommerce/Checkout.php:134
+#: app/WooCommerce/Checkout.php:148
 #: app/WooCommerce/Emails/CustomerQuoteRequested.php:47
 msgid "Thank you for your quote request"
 msgstr "Bedankt voor je offerteaanvraag"
 
-#: app/WooCommerce/Checkout.php:138
+#: app/WooCommerce/Checkout.php:152
 msgid "Something went wrong."
 msgstr "Er ging iets mis."
 
-#: app/WooCommerce/Checkout.php:147
+#: app/WooCommerce/Checkout.php:161
 msgid ""
 "We have received your quote request. We will contact you as soon as possible."
 msgstr ""
 "We hebben je offerteaanvraag ontvangen. We nemen zo snel mogelijk contact "
 "met je op."
 
-#: app/WooCommerce/Checkout.php:151
+#: app/WooCommerce/Checkout.php:165
 msgid "Something went wrong during your quote request. Please contact us."
 msgstr ""
 "Er is iets misgegaan tijdens je offerteaanvraag. Gelieve contact met ons op "
 "te nemen."
 
-#: app/WooCommerce/Checkout.php:164
+#: app/WooCommerce/Checkout.php:178
 msgid "Your quote request is being processed"
 msgstr "Je offerteaanvraag wordt verwerkt"
 
-#: app/WooCommerce/Checkout.php:169
+#: app/WooCommerce/Checkout.php:183
 msgid "Request quote"
 msgstr "Offerte aanvragen"
 
-#: app/WooCommerce/Checkout.php:183
+#: app/WooCommerce/Checkout/VatNumber.php:22
+msgid "VAT number"
+msgstr "BTW Nummer"
+
+#: app/WooCommerce/Checkout/VatNumber.php:41
+msgid "This VAT number seems invalid"
+msgstr "Dit BTW nummer lijkt ongeldig"
+
+#: app/WooCommerce/Checkout/VrdFields.php:44
 msgid "is a required field."
 msgstr "is een verplicht veld."
 
-#: app/WooCommerce/Checkout.php:192
+#: app/WooCommerce/Checkout/VrdFields.php:53
 msgid "Return date must be after shipping date."
 msgstr "De retourdatum moet na de leverdatum liggen."
 
-#: app/WooCommerce/Checkout.php:198
+#: app/WooCommerce/Checkout/VrdFields.php:59
 msgid "Name must be less than 150 characters."
 msgstr "Je naam moet mag uit maximum 150 karakters bestaan."
 
@@ -241,37 +254,33 @@ msgstr[1] "%s <span class=\"count\">(%s)</span>"
 msgid "Change status to %s"
 msgstr "Status wijzigen naar %s"
 
-#: resources/views/checkout/fields.php:1 resources/views/checkout/fields.php:8
+#: resources/views/checkout/fields.php:1
 msgid "Delivery or pickup"
 msgstr "Levering of ophalen"
 
-#: resources/views/checkout/fields.php:11
-msgid "Choose an option"
-msgstr "Kies een optie"
-
-#: resources/views/checkout/fields.php:12
-msgid "Delivery"
-msgstr "Levering"
-
-#: resources/views/checkout/fields.php:13
-msgid "Pickup"
-msgstr "Ophalen"
-
-#: resources/views/checkout/fields.php:24
-msgid "Date"
-msgstr "Datum"
-
-#: resources/views/checkout/fields.php:35 visual-renting-dynamics-sync.php:84
-msgid "Return date"
-msgstr "Retour datum"
-
-#: visual-renting-dynamics-sync.php:82
+#: visual-renting-dynamics-sync.php:84
 msgid "Shipping method"
 msgstr "Verzendmethode"
 
-#: visual-renting-dynamics-sync.php:83
+#: visual-renting-dynamics-sync.php:87
+msgid "Choose an option"
+msgstr "Kies een optie"
+
+#: visual-renting-dynamics-sync.php:88
+msgid "Delivery"
+msgstr "Levering"
+
+#: visual-renting-dynamics-sync.php:89
+msgid "Pickup"
+msgstr "Ophalen"
+
+#: visual-renting-dynamics-sync.php:96
 msgid "Shipping date"
 msgstr "Leverdatum"
+
+#: visual-renting-dynamics-sync.php:103
+msgid "Return date"
+msgstr "Retour datum"
 
 #. Plugin Name of the plugin/theme
 msgid "Visual Renting Dynamics Sync"
@@ -288,6 +297,9 @@ msgstr "Tom Broucke"
 #. Author URI of the plugin/theme
 msgid "https://tombroucke.be"
 msgstr "https://tombroucke.be/"
+
+#~ msgid "Date"
+#~ msgstr "Datum"
 
 #~ msgid "Shipping"
 #~ msgstr "Verzenden"
