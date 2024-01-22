@@ -118,7 +118,7 @@ class Checkout
         }
         
         try {
-            $response = $this->api->requestOrder(apply_filters('visual_renting_dynamics_orderaanvraag_args', $args));
+            $response = $this->api->requestOrder(apply_filters('visual_renting_dynamics_orderaanvraag_args', $args, $order));
             if ($response->getStatusCode() === 200) {
                 $order->update_status('wc-quote-requested');
             }
