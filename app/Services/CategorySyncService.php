@@ -29,8 +29,8 @@ class CategorySyncService implements Runnable
             ->each(
                 function ($category) use ($skipImages) {
                     $args = [
-                    'id' => 'category_' . $category['id'],
-                    'name' => $category['categorienaam'],
+                        'id' => 'category_' . $category['id'],
+                        'name' => $category['categorienaam'],
                     ];
                     if (!$skipImages) {
                         $args['thumbnail_id'] = $this->fetchImagefromCategory($category);
@@ -210,7 +210,7 @@ class CategorySyncService implements Runnable
         wp_update_term($term->term_id, 'product_cat', $termArgs);
 
         if (isset($termArgs['thumbnail_id'])) {
-            update_term_meta($term->term_id, 'thumbnail_id', $termArgs['thumbnail_id'], true);
+            update_term_meta($term->term_id, 'thumbnail_id', $termArgs['thumbnail_id']);
         }
 
         return $term;
