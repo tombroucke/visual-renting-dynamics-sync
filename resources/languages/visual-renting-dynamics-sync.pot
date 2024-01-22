@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Visual Renting Dynamics Sync\n"
-"POT-Creation-Date: 2024-01-19 16:00+0100\n"
+"POT-Creation-Date: 2024-01-22 21:36+0100\n"
 "PO-Revision-Date: 2023-12-28 09:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -39,40 +39,63 @@ msgstr ""
 msgid "Quote requests"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:76
+#. translators: %s: product name
+#: app/WooCommerce/Cart.php:82
+#, php-format
+msgctxt "Item name in quotes"
+msgid "&ldquo;%s&rdquo;"
+msgstr ""
+
+#. translators: %s: product name
+#: app/WooCommerce/Cart.php:88
+#, php-format
+msgid "%s has been added to your quote request."
+msgid_plural "%s have been added to your quote request."
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/WooCommerce/Cart.php:94
+msgid "Continue shopping"
+msgstr ""
+
+#: app/WooCommerce/Cart.php:96
+msgid "View quote request"
+msgstr ""
+
+#: app/WooCommerce/Checkout.php:78
 #, php-format
 msgid "%s attn. %s"
 msgstr ""
 
 #. translators: %s: error message
-#: app/WooCommerce/Checkout.php:130
+#: app/WooCommerce/Checkout.php:132
 #, php-format
 msgid "Error requesting quote: %s"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:148
+#: app/WooCommerce/Checkout.php:150
 #: app/WooCommerce/Emails/CustomerQuoteRequested.php:47
 msgid "Thank you for your quote request"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:152
+#: app/WooCommerce/Checkout.php:154
 msgid "Something went wrong."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:161
+#: app/WooCommerce/Checkout.php:163
 msgid ""
 "We have received your quote request. We will contact you as soon as possible."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:165
+#: app/WooCommerce/Checkout.php:167
 msgid "Something went wrong during your quote request. Please contact us."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:178
+#: app/WooCommerce/Checkout.php:180
 msgid "Your quote request is being processed"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:183
+#: app/WooCommerce/Checkout.php:185
 msgid "Request quote"
 msgstr ""
 
@@ -244,6 +267,10 @@ msgstr ""
 
 #: resources/views/checkout/fields.php:1
 msgid "Delivery or pickup"
+msgstr ""
+
+#: resources/views/order/order-details.php:2
+msgid "Details"
 msgstr ""
 
 #: visual-renting-dynamics-sync.php:84

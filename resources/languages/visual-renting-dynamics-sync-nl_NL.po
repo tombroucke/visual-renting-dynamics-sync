@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Visual Renting Dynamics Sync\n"
-"POT-Creation-Date: 2024-01-19 16:00+0100\n"
-"PO-Revision-Date: 2024-01-19 16:01+0100\n"
+"POT-Creation-Date: 2024-01-22 21:36+0100\n"
+"PO-Revision-Date: 2024-01-22 21:37+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -40,44 +40,67 @@ msgstr "Verhuur"
 msgid "Quote requests"
 msgstr "Offerteaanvragen"
 
-#: app/WooCommerce/Checkout.php:76
+#. translators: %s: product name
+#: app/WooCommerce/Cart.php:82
+#, php-format
+msgctxt "Item name in quotes"
+msgid "&ldquo;%s&rdquo;"
+msgstr "&ldquo;%s&rdquo;"
+
+#. translators: %s: product name
+#: app/WooCommerce/Cart.php:88
+#, php-format
+msgid "%s has been added to your quote request."
+msgid_plural "%s have been added to your quote request."
+msgstr[0] "%s werd toegevoegd aan je offerteaanvraag."
+msgstr[1] "%s werden toegevoegd aan je offerteaanvraag."
+
+#: app/WooCommerce/Cart.php:94
+msgid "Continue shopping"
+msgstr "Ga door"
+
+#: app/WooCommerce/Cart.php:96
+msgid "View quote request"
+msgstr "Bekijk offerteaanvraag"
+
+#: app/WooCommerce/Checkout.php:78
 #, php-format
 msgid "%s attn. %s"
 msgstr "%s tav. %s"
 
 #. translators: %s: error message
-#: app/WooCommerce/Checkout.php:130
+#: app/WooCommerce/Checkout.php:132
 #, php-format
 msgid "Error requesting quote: %s"
 msgstr "Fout bij het aanvragen van een offerte: %s"
 
-#: app/WooCommerce/Checkout.php:148
+#: app/WooCommerce/Checkout.php:150
 #: app/WooCommerce/Emails/CustomerQuoteRequested.php:47
 msgid "Thank you for your quote request"
 msgstr "Bedankt voor je offerteaanvraag"
 
-#: app/WooCommerce/Checkout.php:152
+#: app/WooCommerce/Checkout.php:154
 msgid "Something went wrong."
 msgstr "Er ging iets mis."
 
-#: app/WooCommerce/Checkout.php:161
+#: app/WooCommerce/Checkout.php:163
 msgid ""
 "We have received your quote request. We will contact you as soon as possible."
 msgstr ""
 "We hebben je offerteaanvraag ontvangen. We nemen zo snel mogelijk contact "
 "met je op."
 
-#: app/WooCommerce/Checkout.php:165
+#: app/WooCommerce/Checkout.php:167
 msgid "Something went wrong during your quote request. Please contact us."
 msgstr ""
 "Er is iets misgegaan tijdens je offerteaanvraag. Gelieve contact met ons op "
 "te nemen."
 
-#: app/WooCommerce/Checkout.php:178
+#: app/WooCommerce/Checkout.php:180
 msgid "Your quote request is being processed"
 msgstr "Je offerteaanvraag wordt verwerkt"
 
-#: app/WooCommerce/Checkout.php:183
+#: app/WooCommerce/Checkout.php:185
 msgid "Request quote"
 msgstr "Offerte aanvragen"
 
@@ -257,6 +280,10 @@ msgstr "Status wijzigen naar %s"
 #: resources/views/checkout/fields.php:1
 msgid "Delivery or pickup"
 msgstr "Levering of ophalen"
+
+#: resources/views/order/order-details.php:2
+msgid "Details"
+msgstr "Details"
 
 #: visual-renting-dynamics-sync.php:84
 msgid "Shipping method"
