@@ -21,6 +21,6 @@ class View
         }
 
         extract($context, EXTR_SKIP);
-        include $view;
+        include apply_filters('visual_renting_dynamics_sync_view', $view, $context);
     }
 }

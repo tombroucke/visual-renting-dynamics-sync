@@ -5,6 +5,7 @@ namespace Otomaties\VisualRentingDynamicsSync\WooCommerce;
 use Otomaties\VisualRentingDynamicsSync\Api;
 use Otomaties\VisualRentingDynamicsSync\Helpers\View;
 use Otomaties\VisualRentingDynamicsSync\Helpers\Assets;
+use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout\OrderDetails;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout\VatNumber;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout\VrdFields;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\RentalProduct;
@@ -17,6 +18,7 @@ class Checkout
         private Assets $assets
     ) {
         collect([
+            OrderDetails::class,
             VatNumber::class,
             VrdFields::class,
         ])
