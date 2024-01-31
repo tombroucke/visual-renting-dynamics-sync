@@ -26,6 +26,11 @@ class CategorySyncService implements Runnable
     {
         \WP_CLI::line("Fetching all categories from Visual Renting Dynamics API");
         $this->api->categories()
+            ->reject(
+                function ($category) {
+                    return $category['categorienaam'] == 'Overige';
+                }
+            )
             ->each(
                 function ($category) use ($skipImages) {
                     $args = [
@@ -44,9 +49,9 @@ class CategorySyncService implements Runnable
         \WP_CLI::line("Fetching all subcategories from Visual Renting Dynamics API");
 
         $this->api->subcategories()
-            ->filter(
+            ->reject(
                 function ($subCategory) {
-                    return $subCategory['id'] !== 'category_' . $subCategory['categorieId'];
+                    return $subCategory['subcategorienaam'] == 'Overige';
                 }
             )
             ->filter(
@@ -82,14 +87,9 @@ class CategorySyncService implements Runnable
         \WP_CLI::line("Fetching all subsubcategories from Visual Renting Dynamics API");
 
         $this->api->subsubcategories()
-            ->filter(
+            ->reject(
                 function ($subSubCategory) {
-                    return !empty($subSubCategory['subcategorieId']);
-                }
-            )
-            ->filter(
-                function ($subSubCategory) {
-                    return $subSubCategory['id'] !== 'subcategory_' . $subSubCategory['subcategorieId'];
+                    return $subSubCategory['subsubcategorienaam'] == 'Overige';
                 }
             )
             ->filter(

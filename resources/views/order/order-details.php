@@ -3,7 +3,7 @@
     <ul>
         <?php foreach ($fields as $field) : ?>
             <li>
-                <strong><?php echo $field['name']; ?>: </strong>
+                <strong><?php echo $field['label']; ?>: </strong>
                 <span><?php echo $field['value']; ?></span>
             </li>
         <?php endforeach; ?>

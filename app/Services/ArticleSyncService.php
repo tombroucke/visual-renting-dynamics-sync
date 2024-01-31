@@ -176,22 +176,17 @@ class ArticleSyncService implements Runnable
             }
 
             $categoryKeys = array_reverse([
-                'categoryId' => 'category',
-                'subcategoryId' => 'subcategory',
-                'subsubcategoryId' => 'subsubcategory',
+                'category',
+                'subcategory',
+                'subsubcategory',
             ]);
 
-            $categoryId = null;
-            $prefix = null;
-            foreach ($categoryKeys as $categoryKey => $categoryPrefix) {
-                $categoryId = $product->get_meta($categoryKey, true);
-                $prefix = $categoryPrefix;
-                if ($categoryId) {
-                    break;
-                }
+            $externalCategoryIds = [];
+            foreach ($categoryKeys as $categoryKey) {
+                $externalCategoryIds[] = $categoryKey . '_' . $product->get_meta($categoryKey . '_id', true);
             }
 
-            if ($categoryId) {
+            if (count($externalCategoryIds) > 0) {
                 $terms = get_terms(
                     [
                     'taxonomy' => 'product_cat',
@@ -199,14 +194,20 @@ class ArticleSyncService implements Runnable
                     'meta_query' => [
                         [
                             'key' => 'external_id',
-                            'value' => $prefix . '_' . $categoryId,
+                            'value' => $externalCategoryIds,
+                            'compare' => 'IN',
                         ],
                     ],
                     ]
                 );
-
                 if (!empty($terms)) {
-                    wp_set_object_terms($product->get_ID(), $terms[0]->term_id, 'product_cat');
+                    $termIds = array_map(
+                        function ($term) {
+                            return $term->term_id;
+                        },
+                        $terms
+                    );
+                    wp_set_object_terms($product->get_ID(), $termIds, 'product_cat');
                 }
             }
         }

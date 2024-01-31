@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Visual Renting Dynamics Sync\n"
-"POT-Creation-Date: 2024-01-22 21:36+0100\n"
-"PO-Revision-Date: 2024-01-22 21:37+0100\n"
+"POT-Creation-Date: 2024-01-31 12:41+0100\n"
+"PO-Revision-Date: 2024-01-31 12:42+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -63,44 +63,44 @@ msgstr "Ga door"
 msgid "View quote request"
 msgstr "Bekijk offerteaanvraag"
 
-#: app/WooCommerce/Checkout.php:78
+#: app/WooCommerce/Checkout.php:88
 #, php-format
 msgid "%s attn. %s"
 msgstr "%s tav. %s"
 
 #. translators: %s: error message
-#: app/WooCommerce/Checkout.php:132
+#: app/WooCommerce/Checkout.php:147
 #, php-format
 msgid "Error requesting quote: %s"
 msgstr "Fout bij het aanvragen van een offerte: %s"
 
-#: app/WooCommerce/Checkout.php:150
+#: app/WooCommerce/Checkout.php:165
 #: app/WooCommerce/Emails/CustomerQuoteRequested.php:47
 msgid "Thank you for your quote request"
 msgstr "Bedankt voor je offerteaanvraag"
 
-#: app/WooCommerce/Checkout.php:154
+#: app/WooCommerce/Checkout.php:169
 msgid "Something went wrong."
 msgstr "Er ging iets mis."
 
-#: app/WooCommerce/Checkout.php:163
+#: app/WooCommerce/Checkout.php:178
 msgid ""
 "We have received your quote request. We will contact you as soon as possible."
 msgstr ""
 "We hebben je offerteaanvraag ontvangen. We nemen zo snel mogelijk contact "
 "met je op."
 
-#: app/WooCommerce/Checkout.php:167
+#: app/WooCommerce/Checkout.php:182
 msgid "Something went wrong during your quote request. Please contact us."
 msgstr ""
 "Er is iets misgegaan tijdens je offerteaanvraag. Gelieve contact met ons op "
 "te nemen."
 
-#: app/WooCommerce/Checkout.php:180
+#: app/WooCommerce/Checkout.php:195
 msgid "Your quote request is being processed"
 msgstr "Je offerteaanvraag wordt verwerkt"
 
-#: app/WooCommerce/Checkout.php:185
+#: app/WooCommerce/Checkout.php:200
 msgid "Request quote"
 msgstr "Offerte aanvragen"
 
@@ -112,15 +112,15 @@ msgstr "BTW Nummer"
 msgid "This VAT number seems invalid"
 msgstr "Dit BTW nummer lijkt ongeldig"
 
-#: app/WooCommerce/Checkout/VrdFields.php:44
+#: app/WooCommerce/Checkout/VrdFields.php:54
 msgid "is a required field."
 msgstr "is een verplicht veld."
 
-#: app/WooCommerce/Checkout/VrdFields.php:53
+#: app/WooCommerce/Checkout/VrdFields.php:63
 msgid "Return date must be after shipping date."
 msgstr "De retourdatum moet na de leverdatum liggen."
 
-#: app/WooCommerce/Checkout/VrdFields.php:59
+#: app/WooCommerce/Checkout/VrdFields.php:69
 msgid "Name must be less than 150 characters."
 msgstr "Je naam moet mag uit maximum 150 karakters bestaan."
 
@@ -285,29 +285,45 @@ msgstr "Levering of ophalen"
 msgid "Details"
 msgstr "Details"
 
-#: visual-renting-dynamics-sync.php:84
+#: visual-renting-dynamics-sync.php:83
+msgid "Event details"
+msgstr "Gegevens evenement"
+
+#: visual-renting-dynamics-sync.php:87
 msgid "Shipping method"
 msgstr "Verzendmethode"
 
-#: visual-renting-dynamics-sync.php:87
+#: visual-renting-dynamics-sync.php:90
 msgid "Choose an option"
 msgstr "Kies een optie"
 
-#: visual-renting-dynamics-sync.php:88
+#: visual-renting-dynamics-sync.php:91
 msgid "Delivery"
 msgstr "Levering"
 
-#: visual-renting-dynamics-sync.php:89
+#: visual-renting-dynamics-sync.php:92
 msgid "Pickup"
 msgstr "Ophalen"
 
-#: visual-renting-dynamics-sync.php:96
+#: visual-renting-dynamics-sync.php:99 visual-renting-dynamics-sync.php:104
 msgid "Shipping date"
 msgstr "Leverdatum"
 
-#: visual-renting-dynamics-sync.php:103
+#: visual-renting-dynamics-sync.php:105
+msgid "Pickup date"
+msgstr "Ophaaldatum"
+
+#: visual-renting-dynamics-sync.php:110
 msgid "Return date"
 msgstr "Retour datum"
+
+#: visual-renting-dynamics-sync.php:118
+msgid "Client details"
+msgstr "Klantgegevens"
+
+#: visual-renting-dynamics-sync.php:122
+msgid "Client reference"
+msgstr "Klantreferentie"
 
 #. Plugin Name of the plugin/theme
 msgid "Visual Renting Dynamics Sync"

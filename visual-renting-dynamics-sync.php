@@ -78,34 +78,54 @@ add_action('visual_renting_dynamics_sync', function ($plugin) {
     });
 
     $plugin->singleton('custom-checkout-fields', function ($plugin, $args) {
-        return apply_filters('visual_renting_dynamics_custom_checkout_fields', [
-            'vrd_shipping_method' => [
-                'type' => 'select',
-                'label' => __('Shipping method', 'visual-renting-dynamics-sync'),
-                'required' => true,
-                'options' => [
-                    '' => __('Choose an option', 'woocommerce'),
-                    'delivery' => __('Delivery', 'visual-renting-dynamics-sync'),
-                    'pickup' => __('Pickup', 'visual-renting-dynamics-sync'),
+        return apply_filters('visual_renting_dynamics_custom_checkout_fields', collect([
+            'event' => [
+                'label' => __('Event details', 'visual-renting-dynamics-sync'),
+                'fields' => [
+                    'vrd_shipping_method' => [
+                        'type' => 'select',
+                        'label' => __('Shipping method', 'visual-renting-dynamics-sync'),
+                        'required' => true,
+                        'options' => [
+                            '' => __('Choose an option', 'woocommerce'),
+                            'delivery' => __('Delivery', 'visual-renting-dynamics-sync'),
+                            'pickup' => __('Pickup', 'visual-renting-dynamics-sync'),
+                        ],
+                        'input_class' => ['form-select'],
+                        'default' => WC()->session ? WC()->session->get('vrd_shipping_method') : '',
+                    ],
+                    'vrd_shipping_date' => [
+                        'type' => 'date',
+                        'label' => __('Shipping date', 'visual-renting-dynamics-sync'),
+                        'required' => true,
+                        'input_class' => ['form-control'],
+                        'default' => WC()->session ? WC()->session->get('vrd_shipping_date') : '',
+                        'custom_attributes' => [
+                            'data-delivery-label' => __('Shipping date', 'visual-renting-dynamics-sync'),
+                            'data-pickup-label' => __('Pickup date', 'visual-renting-dynamics-sync'),
+                        ]
+                    ],
+                    'vrd_return_date' => [
+                        'type' => 'date',
+                        'label' => __('Return date', 'visual-renting-dynamics-sync'),
+                        'required' => true,
+                        'input_class' => ['form-control'],
+                        'default' => WC()->session ? WC()->session->get('vrd_return_date') : '',
+                    ],
+                ]
+            ],
+            'client' => [
+                'label' => __('Client details', 'visual-renting-dynamics-sync'),
+                'fields' => [
+                    'vrd_client_reference' => [
+                        'type' => 'text',
+                        'label' => __('Client reference', 'visual-renting-dynamics-sync'),
+                        'input_class' => ['form-control'],
+                        'default' => WC()->session ? WC()->session->get('vrd_client_reference') : '',
+                    ],
                 ],
-                'input_class' => ['form-select'],
-                'default' => WC()->session->get('vrd_shipping_method'),
-            ],
-            'vrd_shipping_date' => [
-                'type' => 'date',
-                'label' => __('Shipping date', 'visual-renting-dynamics-sync'),
-                'required' => true,
-                'input_class' => ['form-control'],
-                'default' => WC()->session->get('vrd_shipping_date'),
-            ],
-            'vrd_return_date' => [
-                'type' => 'date',
-                'label' => __('Return date', 'visual-renting-dynamics-sync'),
-                'required' => true,
-                'input_class' => ['form-control'],
-                'default' => WC()->session->get('vrd_return_date'),
-            ],
-        ]);
+            ]
+        ]));
     });
 });
 

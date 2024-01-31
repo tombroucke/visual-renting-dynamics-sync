@@ -34,7 +34,7 @@ class QuoteRequested extends \WC_Email
      * @return string
      */
     public function get_default_subject() {
-        return __( '[{site_title}]: New quote request #{order_number}', 'woocommerce' );
+        return __( '[{site_title}]: New quote request #{order_number}', 'visual-renting-dynamics-sync' );
     }
 
     /**
@@ -44,7 +44,7 @@ class QuoteRequested extends \WC_Email
      * @return string
      */
     public function get_default_heading() {
-        return __( 'New quote request: #{order_number}', 'woocommerce' );
+        return __( 'New quote request: #{order_number}', 'visual-renting-dynamics-sync' );
     }
 
 
@@ -122,7 +122,7 @@ class QuoteRequested extends \WC_Email
      * @return string
      */
     public function get_default_additional_content() {
-        return __( 'Congratulations on the quote request.', 'woocommerce' );
+        return __( 'Congratulations on the quote request.', 'visual-renting-dynamics-sync' );
     }
 
     /**

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Visual Renting Dynamics Sync\n"
-"POT-Creation-Date: 2024-01-22 21:36+0100\n"
+"POT-Creation-Date: 2024-01-31 12:41+0100\n"
 "PO-Revision-Date: 2023-12-28 09:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -62,40 +62,40 @@ msgstr ""
 msgid "View quote request"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:78
+#: app/WooCommerce/Checkout.php:88
 #, php-format
 msgid "%s attn. %s"
 msgstr ""
 
 #. translators: %s: error message
-#: app/WooCommerce/Checkout.php:132
+#: app/WooCommerce/Checkout.php:147
 #, php-format
 msgid "Error requesting quote: %s"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:150
+#: app/WooCommerce/Checkout.php:165
 #: app/WooCommerce/Emails/CustomerQuoteRequested.php:47
 msgid "Thank you for your quote request"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:154
+#: app/WooCommerce/Checkout.php:169
 msgid "Something went wrong."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:163
+#: app/WooCommerce/Checkout.php:178
 msgid ""
 "We have received your quote request. We will contact you as soon as possible."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:167
+#: app/WooCommerce/Checkout.php:182
 msgid "Something went wrong during your quote request. Please contact us."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:180
+#: app/WooCommerce/Checkout.php:195
 msgid "Your quote request is being processed"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:185
+#: app/WooCommerce/Checkout.php:200
 msgid "Request quote"
 msgstr ""
 
@@ -107,15 +107,15 @@ msgstr ""
 msgid "This VAT number seems invalid"
 msgstr ""
 
-#: app/WooCommerce/Checkout/VrdFields.php:44
+#: app/WooCommerce/Checkout/VrdFields.php:54
 msgid "is a required field."
 msgstr ""
 
-#: app/WooCommerce/Checkout/VrdFields.php:53
+#: app/WooCommerce/Checkout/VrdFields.php:63
 msgid "Return date must be after shipping date."
 msgstr ""
 
-#: app/WooCommerce/Checkout/VrdFields.php:59
+#: app/WooCommerce/Checkout/VrdFields.php:69
 msgid "Name must be less than 150 characters."
 msgstr ""
 
@@ -273,28 +273,44 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:84
-msgid "Shipping method"
+#: visual-renting-dynamics-sync.php:83
+msgid "Event details"
 msgstr ""
 
 #: visual-renting-dynamics-sync.php:87
+msgid "Shipping method"
+msgstr ""
+
+#: visual-renting-dynamics-sync.php:90
 msgid "Choose an option"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:88
+#: visual-renting-dynamics-sync.php:91
 msgid "Delivery"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:89
+#: visual-renting-dynamics-sync.php:92
 msgid "Pickup"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:96
+#: visual-renting-dynamics-sync.php:99 visual-renting-dynamics-sync.php:104
 msgid "Shipping date"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:103
+#: visual-renting-dynamics-sync.php:105
+msgid "Pickup date"
+msgstr ""
+
+#: visual-renting-dynamics-sync.php:110
 msgid "Return date"
+msgstr ""
+
+#: visual-renting-dynamics-sync.php:118
+msgid "Client details"
+msgstr ""
+
+#: visual-renting-dynamics-sync.php:122
+msgid "Client reference"
 msgstr ""
 
 #. Plugin Name of the plugin/theme

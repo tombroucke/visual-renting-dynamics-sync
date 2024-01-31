@@ -15,14 +15,19 @@ class OrderDetails
 
     public function showVrdOrderDetails($order)
     {
-        $fields = [];
-
-        collect(visualRentingDynamicSync()->make('custom-checkout-fields'))
-            ->each(function ($fieldSettings, $fieldName) use (&$fields, $order) {
-                $fields[] = [
-                    'name' => $fieldSettings['label'],
-                    'value' => $this->beautifyFieldValue($fieldName, $order->get_meta($fieldName), $fieldSettings)
+        $fields = visualRentingDynamicSync()->make('custom-checkout-fields')
+            ->pluck('fields')
+            ->flatmap(function ($item) {
+                return $item;
+            })
+            ->map(function ($field, $fieldName) use (&$fields, $order) {
+                return [
+                    'label' => $field['label'],
+                    'value' => $this->beautifyFieldValue($fieldName, $order->get_meta($fieldName), $field)
                 ];
+            })
+            ->reject(function ($field) {
+                return empty($field['value']) || $field['value'] === '';
             });
         
         visualRentingDynamicSync()->make(View::class)->render('order/order-details', [

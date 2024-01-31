@@ -50,6 +50,16 @@ class Checkout
         if (property_exists($this->assets->entrypoints()->checkout, 'js')) {
             foreach ($this->assets->entrypoints()->checkout->js as $js) {
                 wp_enqueue_script('vrd-checkout-' . $js, $this->assets->url($js), [], null, true);
+                
+                $localize = apply_filters('visual_renting_dynamics_checkout_localize', [
+                    'shipping_date' => [
+                        'disabled_days' => []
+                    ],
+                    'return_date' => [
+                        'disabled_days' => []
+                    ]
+                ], $js);
+                wp_localize_script('vrd-checkout-' . $js, 'vrd_checkout_vars', $localize);
             }
         }
         
@@ -69,7 +79,7 @@ class Checkout
     {
         $shippingDate = \DateTime::createFromFormat('Y-m-d', $postedData['vrd_shipping_date']);
         $returnDate = \DateTime::createFromFormat('Y-m-d', $postedData['vrd_return_date']);
-
+        $clientReference = $postedData['vrd_client_reference'] ?? null;
         $isDelivery = $order->get_meta('vrd_shipping_method') === 'delivery';
         $name = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
 
@@ -90,12 +100,17 @@ class Checkout
             'telefoonMobiel' => $order->get_billing_phone(),
             'email' => $order->get_billing_email(),
             'memo' => $order->get_customer_note(),
-            'leveringDatumTijd' => $shippingDate ? $shippingDate->format('Y-m-d\TH:i') : null,
+            'leveringDatumTijd' => $shippingDate ? $shippingDate->format('Y-m-d') : null,
             'afleveren' => $isDelivery,
-            'retourneringDatumTijd' => $returnDate ? $returnDate->format('Y-m-d\TH:i') : null,
+            'retourneringDatumTijd' => $returnDate ? $returnDate->format('Y-m-d') : null,
             'ophalen' => $isDelivery,
             'artikelen' => [],
         ];
+
+        if ($clientReference) {
+            $args['referentieKlant'] = $clientReference;
+        }
+        ray($args);
 
         if ($order->get_meta('_billing_vat_number')) {
             $args['btwNummer'] = $order->get_meta('_billing_vat_number');

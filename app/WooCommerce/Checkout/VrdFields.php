@@ -19,11 +19,16 @@ class VrdFields
 
     public function addCustomFieldsToPostedData(array $postedData) : array
     {
-        foreach (visualRentingDynamicSync()->make('custom-checkout-fields') as $field => $label) {
-            if (!empty($_POST[$field])) {
-                $postedData[$field] = sanitize_text_field($_POST[$field]);
-            }
-        }
+        visualRentingDynamicSync()->make('custom-checkout-fields')
+            ->pluck('fields')
+            ->flatmap(function ($item) {
+                return $item;
+            })
+            ->each(function ($fieldSettings, $fieldName) use (&$postedData) {
+                if (!empty($_POST[$fieldName])) {
+                    $postedData[$fieldName] = sanitize_text_field($_POST[$fieldName]);
+                }
+            });
 
         return $postedData;
     }
@@ -39,12 +44,17 @@ class VrdFields
 
     public function validateCustomFields()
     {
-        foreach (visualRentingDynamicSync()->make('custom-checkout-fields') as $fieldName => $fieldSettings) {
-            if (empty($_POST[$fieldName])) {
-                $notice = '<strong>' . $fieldSettings['label'] . '</strong> ' . __('is a required field.', 'visual-renting-dynamics-sync'); // phpcs:ignore Generic.Files.LineLength.TooLong
-                wc_add_notice($notice, 'error');
-            }
-        }
+        visualRentingDynamicSync()->make('custom-checkout-fields')
+            ->pluck('fields')
+            ->flatmap(function ($item) {
+                return $item;
+            })
+            ->each(function ($fieldSettings, $fieldName) {
+                if (isset($fieldSettings['required']) && $fieldSettings['required'] && empty($_POST[$fieldName])) {
+                    $notice = '<strong>' . $fieldSettings['label'] . '</strong> ' . __('is a required field.', 'visual-renting-dynamics-sync'); // phpcs:ignore Generic.Files.LineLength.TooLong
+                    wc_add_notice($notice, 'error');
+                }
+            });
         
         if (isset($_POST['vrd_shipping_date']) && isset($_POST['vrd_return_date'])) {
             $shippingDate = \DateTime::createFromFormat('Y-m-d', $_POST['vrd_shipping_date']);
@@ -63,28 +73,43 @@ class VrdFields
 
     public function temporarilySaveCustomFields()
     {
-        foreach (visualRentingDynamicSync()->make('custom-checkout-fields') as $fieldName => $fieldSettings) {
-            if (!empty($_POST[$fieldName])) {
-                WC()->session->set($fieldName, sanitize_text_field($_POST[$fieldName]));
-            }
-        }
+        visualRentingDynamicSync()->make('custom-checkout-fields')
+            ->pluck('fields')
+            ->flatmap(function ($item) {
+                return $item;
+            })
+            ->each(function ($fieldSettings, $fieldName) {
+                if (!empty($_POST[$fieldName])) {
+                    WC()->session->set($fieldName, sanitize_text_field($_POST[$fieldName]));
+                }
+            });
     }
 
     public function removeTemporarilySavedCustomFields()
     {
-        foreach (visualRentingDynamicSync()->make('custom-checkout-fields') as $fieldName => $fieldSettings) {
-            WC()->session->__unset($fieldName);
-        }
+        visualRentingDynamicSync()->make('custom-checkout-fields')
+            ->pluck('fields')
+            ->flatmap(function ($item) {
+                return $item;
+            })
+            ->each(function ($fieldSettings, $fieldName) {
+                WC()->session->__unset($fieldName);
+            });
     }
 
     public function saveCustomFields(int $orderId) : void
     {
         $order = wc_get_order($orderId);
-        foreach (visualRentingDynamicSync()->make('custom-checkout-fields') as $fieldName => $fieldSettings) {
-            if (!empty($_POST[$fieldName])) {
-                $order->update_meta_data($fieldName, sanitize_text_field($_POST[$fieldName]));
-                $order->save();
-            }
-        }
+        visualRentingDynamicSync()->make('custom-checkout-fields')
+            ->pluck('fields')
+            ->flatmap(function ($item) {
+                return $item;
+            })
+            ->each(function ($fieldSettings, $fieldName) use ($order) {
+                if (!empty($_POST[$fieldName])) {
+                    $order->update_meta_data($fieldName, sanitize_text_field($_POST[$fieldName]));
+                    $order->save();
+                }
+            });
     }
 }

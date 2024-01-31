@@ -30,11 +30,16 @@ class Admin
     }
 
     public function addCustomFieldsToOrderDetails($order) {
-        foreach (visualRentingDynamicSync()->make('custom-checkout-fields') as $key => $label) {
-            $value = $order->get_meta($key);
-            if ($value) {
-                echo '<p><strong>' . $label . ':</strong><br />' . $value . '</p>';
-            }
-        }
+        visualRentingDynamicSync()->make('custom-checkout-fields')
+            ->pluck('fields')
+            ->flatmap(function ($item) {
+                return $item;
+            })
+            ->each(function ($fieldSettings, $fieldName) use ($order) {
+                $value = $order->get_meta($fieldName);
+                if ($value) {
+                    echo '<p><strong>' . $fieldSettings['label'] . ':</strong><br />' . $value . '</p>';
+                }
+            });
     }
 }

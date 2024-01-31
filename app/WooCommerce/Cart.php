@@ -93,7 +93,7 @@ class Cart
             $return_to = apply_filters( 'woocommerce_continue_shopping_redirect', wc_get_raw_referer() ? wp_validate_redirect( wc_get_raw_referer(), false ) : wc_get_page_permalink( 'shop' ) );
             $message   = sprintf( '<a href="%s" tabindex="1" class="button wc-forward%s">%s</a> %s', esc_url( $return_to ), esc_attr( $wp_button_class ), esc_html__( 'Continue shopping', 'woocommerce' ), esc_html( $added_text ) );
         } else {
-            $message = sprintf( '<a href="%s" tabindex="1" class="button wc-forward%s">%s</a> %s', esc_url( wc_get_cart_url() ), esc_attr( $wp_button_class ), esc_html__( 'View quote request', 'woocommerce' ), esc_html( $added_text ) );
+            $message = sprintf( '<a href="%s" tabindex="1" class="button wc-forward%s">%s</a> %s', esc_url( wc_get_cart_url() ), esc_attr( $wp_button_class ), esc_html__( 'View quote request', 'visual-renting-dynamics-sync' ), esc_html( $added_text ) );
         }
     
         if ( has_filter( 'wc_add_to_cart_message' ) ) {
