@@ -15,10 +15,10 @@
     "require": {
         "php": ">=8",
         "composer/installers": "^1.0 || ^2.0",
-        "illuminate/container": "^9.0",
+        "illuminate/container": "*",
         "tombroucke/wp-sync-posts": "^2.0",
         "monolog/monolog": "^2.3",
-        "illuminate/support": "^9.0",
+        "illuminate/support": "*",
         "guzzlehttp/guzzle": "^7.8"
     },
     "keywords": ["wordpress", "plugin", "events", "calendar"],
