@@ -11,7 +11,7 @@ use Otomaties\VisualRentingDynamicsSync\Helpers\Assets;
 /*
  * Plugin Name:       Visual Renting Dynamics Sync
  * Description:       Syncs Visual Renting Dynamics with WooCommerce
- * Version:           1.6.0
+ * Version:           1.6.1
  * Author:            Tom Broucke
  * Author URI:        https://tombroucke.be
  * License:           GPL v2 or later
