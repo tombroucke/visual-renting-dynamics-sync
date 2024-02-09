@@ -110,7 +110,6 @@ class Checkout
         if ($clientReference) {
             $args['referentieKlant'] = $clientReference;
         }
-        ray($args);
 
         if ($order->get_meta('_billing_vat_number')) {
             $args['btwNummer'] = $order->get_meta('_billing_vat_number');

@@ -9,8 +9,9 @@ class VrdFields
 
     public function runHooks()
     {
+        $displayFieldsaction = apply_filters('visual_renting_dynamics_display_fields_action', 'woocommerce_checkout_before_order_review_heading');
         add_filter('woocommerce_checkout_posted_data', [$this, 'addCustomFieldsToPostedData']);
-        add_action('woocommerce_checkout_before_order_review_heading', [$this, 'addCustomFields']);
+        add_action($displayFieldsaction, [$this, 'addCustomFields']);
         add_action('woocommerce_checkout_process', [$this, 'validateCustomFields']);
         add_action('woocommerce_checkout_process', [$this, 'temporarilySaveCustomFields']);
         add_action('woocommerce_checkout_order_processed', [$this, 'removeTemporarilySavedCustomFields'], 999);
