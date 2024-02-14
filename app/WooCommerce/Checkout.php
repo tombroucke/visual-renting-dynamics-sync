@@ -53,9 +53,11 @@ class Checkout
                 
                 $localize = apply_filters('visual_renting_dynamics_checkout_localize', [
                     'shipping_date' => [
+                        'min_date' => 'today',
                         'disabled_days' => []
                     ],
                     'return_date' => [
+                        'min_date' => 'today',
                         'disabled_days' => []
                     ]
                 ], $js);
@@ -82,17 +84,10 @@ class Checkout
         $clientReference = $postedData['vrd_client_reference'] ?? null;
         $isDelivery = $order->get_meta('vrd_shipping_method') === 'delivery';
         $name = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
-
-        if ($order->get_billing_company()) {
-            $name = sprintf(
-                __('%s attn. %s', 'visual-renting-dynamics-sync'),
-                $order->get_billing_company(),
-                $name
-            );
-        }
         
         $args = [
-            'naam' => $name,
+            'naam' => $order->get_billing_company() ? $order->get_billing_company() : $name,
+            'contactpersoon' => $name,
             'adres' => $order->get_billing_address_1() . ' ' . $order->get_billing_address_2(),
             'postcode' => $order->get_billing_postcode(),
             'plaats' => $order->get_billing_city(),
@@ -116,6 +111,7 @@ class Checkout
         }
 
         if ($isDelivery) {
+            $args['contactpersoonLevering'] = $name;
             $args['adresLevering'] = $order->get_shipping_address_1() . ' ' . $order->get_shipping_address_2();
             $args['postcodeLevering'] = $order->get_shipping_postcode();
             $args['plaatsLevering'] = $order->get_shipping_city();
@@ -132,7 +128,7 @@ class Checkout
                 ];
             }
         }
-        
+
         try {
             $response = $this->api->requestOrder(apply_filters('visual_renting_dynamics_orderaanvraag_args', $args, $order));
             if ($response->getStatusCode() === 200) {

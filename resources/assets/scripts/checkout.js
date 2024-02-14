@@ -10,7 +10,7 @@ import { Dutch } from "flatpickr/dist/l10n/nl.js";
  */
 domReady(async () => {
 	flatpickr("#vrd_shipping_date", {
-		minDate: "today",
+		minDate: vrd_checkout_vars.shipping_date.min_date,
 		altInput: true,
 		altFormat: "d/m/Y",
 		locale: Dutch,
@@ -22,7 +22,7 @@ domReady(async () => {
 		],
 	});
 	flatpickr("#vrd_return_date", {
-		minDate: "today",
+		minDate: vrd_checkout_vars.return_date.min_date,
 		altInput: true,
 		altFormat: "d/m/Y",
 		locale: Dutch,
