@@ -30,17 +30,21 @@ class VatNumber
     }
 
     public function validateVatNumber() {
-
-        if (isset($_POST['billing_vat_number']) && $_POST['billing_vat_number'] != '') {
-
-            $cleanVatNumber = $this->cleanVatNumber($_POST['billing_vat_number']);
-            $validator = new \Ibericode\Vat\Validator();
-            $validFormat = $validator->validateVatNumberFormat($cleanVatNumber);
-            $validModulo97 = $this->validateModulo97(preg_replace("/[^0-9]/", "", $cleanVatNumber));
-            if (!$validFormat || !$validModulo97) {
-                wc_add_notice(__('This VAT number seems invalid', 'eetoile'), 'error');
-            }
+        if (!isset($_POST['billing_vat_number']) || $_POST['billing_vat_number'] == '') {
+            return;
         }
+
+        if (!$this->isVatNumberValid($_POST['billing_vat_number'])) {
+            wc_add_notice(__('This VAT number seems invalid', 'eetoile'), 'error');
+        }
+    }
+
+    public function isVatNumberValid($vatNumber) {
+        $cleanVatNumber = $this->cleanVatNumber($_POST['billing_vat_number']);
+        $validator = new \Ibericode\Vat\Validator();
+        $validFormat = $validator->validateVatNumberFormat($cleanVatNumber);
+        $validModulo97 = $this->validateModulo97(preg_replace("/[^0-9]/", "", $cleanVatNumber));
+        return $validFormat && $validModulo97;
     }
 
     public function addVatNumberToAddress($fields, $order)
