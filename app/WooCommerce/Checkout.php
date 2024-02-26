@@ -84,6 +84,9 @@ class Checkout
         $clientReference = $postedData['vrd_client_reference'] ?? null;
         $isDelivery = $order->get_meta('vrd_shipping_method') === 'delivery';
         $name = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
+
+        $countries_instance = new \WC_Countries();
+        $billingCountryCode = $order->get_billing_country();
         
         $args = [
             'naam' => $order->get_billing_company() ? $order->get_billing_company() : $name,
@@ -91,7 +94,7 @@ class Checkout
             'adres' => $order->get_billing_address_1() . ' ' . $order->get_billing_address_2(),
             'postcode' => $order->get_billing_postcode(),
             'plaats' => $order->get_billing_city(),
-            'land' => $order->get_billing_country(),
+            'land' => $countries_instance->get_countries()[$billingCountryCode] ?? $billingCountryCode,
             'telefoonMobiel' => $order->get_billing_phone(),
             'email' => $order->get_billing_email(),
             'memo' => $order->get_customer_note(),
@@ -111,11 +114,12 @@ class Checkout
         }
 
         if ($isDelivery) {
+            $shippingCountryCode = $order->get_shipping_country();
             $args['contactpersoonLevering'] = $name;
             $args['adresLevering'] = $order->get_shipping_address_1() . ' ' . $order->get_shipping_address_2();
             $args['postcodeLevering'] = $order->get_shipping_postcode();
             $args['plaatsLevering'] = $order->get_shipping_city();
-            $args['landLevering'] = $order->get_shipping_country();
+            $args['landLevering'] = $countries_instance->get_countries()[$shippingCountryCode] ?? $shippingCountryCode;
         }
         
         foreach ($order->get_items() as $item) {
