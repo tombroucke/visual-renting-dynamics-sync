@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Visual Renting Dynamics Sync\n"
 "POT-Creation-Date: 2024-01-31 12:41+0100\n"
-"PO-Revision-Date: 2024-01-31 12:42+0100\n"
+"PO-Revision-Date: 2024-02-28 14:48+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -279,7 +279,7 @@ msgstr "Status wijzigen naar %s"
 
 #: resources/views/checkout/fields.php:1
 msgid "Delivery or pickup"
-msgstr "Levering of ophalen"
+msgstr "Levering of afhalen"
 
 #: resources/views/order/order-details.php:2
 msgid "Details"
@@ -303,7 +303,7 @@ msgstr "Levering"
 
 #: visual-renting-dynamics-sync.php:92
 msgid "Pickup"
-msgstr "Ophalen"
+msgstr "Afhalen"
 
 #: visual-renting-dynamics-sync.php:99 visual-renting-dynamics-sync.php:104
 msgid "Shipping date"
@@ -311,7 +311,7 @@ msgstr "Leverdatum"
 
 #: visual-renting-dynamics-sync.php:105
 msgid "Pickup date"
-msgstr "Ophaaldatum"
+msgstr "Afhaaldatum"
 
 #: visual-renting-dynamics-sync.php:110
 msgid "Return date"

@@ -88,8 +88,8 @@ add_action('visual_renting_dynamics_sync', function ($plugin) {
                         'required' => true,
                         'options' => [
                             '' => __('Choose an option', 'woocommerce'),
-                            'delivery' => __('Delivery', 'visual-renting-dynamics-sync'),
                             'pickup' => __('Pickup', 'visual-renting-dynamics-sync'),
+                            'delivery' => __('Delivery', 'visual-renting-dynamics-sync'),
                         ],
                         'input_class' => ['form-select'],
                         'default' => WC()->session ? WC()->session->get('vrd_shipping_method') : '',
