@@ -160,19 +160,23 @@ class Checkout
         
         $order = wc_get_order($wp->query_vars['order-received']);
 
-        if ($endpoint === 'order-received' && $order->has_status('quote-requested')) {
+        if ($endpoint === 'order-received' && $order && $order->has_status('quote-requested')) {
             return __('Thank you for your quote request', 'visual-renting-dynamics-sync');
         }
 
-        if ($endpoint === 'order-received' && $order->has_status('quote-failed')) {
+        if ($endpoint === 'order-received' && $order && $order->has_status('quote-failed')) {
             return __('Something went wrong.', 'visual-renting-dynamics-sync');
         }
 
         return $title;
     }
 
-    public function orderReceivedText(string $text, \WC_Order $order) : string
+    public function orderReceivedText(string $text, ?\WC_Order $order) : string
     {
+        if (!$order) {
+            return $text;
+        }
+        
         if ($order->has_status('quote-requested')) {
             return __('We have received your quote request. We will contact you as soon as possible.', 'visual-renting-dynamics-sync'); // phpcs:ignore Generic.Files.LineLength.TooLong
         }
