@@ -170,8 +170,7 @@ class ArticleSyncService implements Runnable
             
                 if (is_array($syncedImages)) {
                     array_shift($syncedImages);
-                    $product->update_meta_data('_product_image_gallery', implode(',', $syncedImages));
-                    $product->save();
+                    update_post_meta($product->get_ID(), '_product_image_gallery', implode(',', $syncedImages));
                 }
             }
 
