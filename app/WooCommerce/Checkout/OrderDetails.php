@@ -32,7 +32,7 @@ class OrderDetails
         
         visualRentingDynamicSync()->make(View::class)->render('order/order-details', [
             'order' => $order,
-            'fields' => $fields
+            'fields' => apply_filters('visual_renting_dynamics_order_details_fields', $fields, $order)
         ]);
     }
 
