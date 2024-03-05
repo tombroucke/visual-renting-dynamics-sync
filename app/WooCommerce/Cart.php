@@ -13,7 +13,9 @@ class Cart
         add_filter('woocommerce_cart_needs_shipping', [$this, 'cartNeedsShipping']);
         add_filter('woocommerce_cart_needs_payment', [$this, 'cartNeedsPayment']);
         add_filter('wc_add_to_cart_message_html', [$this, 'addToCartMessage'], 10, 3);
-
+        add_filter('woocommerce_cart_item_price', [$this, 'cartItemPriceOnRequest'], 10, 3);
+        add_filter('woocommerce_cart_item_subtotal', [$this, 'cartItemPriceOnRequest'], 10, 3);
+        
         return $this;
     }
 
@@ -102,5 +104,16 @@ class Cart
         }
     
         return $message;
+    }
+
+    public function cartItemPriceOnRequest($price, $cart_item, $cart_item_key) : string
+    {
+        $product = $cart_item['data'];
+        $priceOnRequest = get_post_meta($product->get_id(), 'priceOnRequest', true);
+        if ($priceOnRequest) {
+            return __('On request', 'visual-renting-dynamics-sync');
+        }
+
+        return $price;
     }
 }
