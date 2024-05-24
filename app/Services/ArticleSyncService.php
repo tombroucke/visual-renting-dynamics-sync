@@ -138,7 +138,10 @@ class ArticleSyncService implements Runnable
                                 $filename = $document['bestandsnaam'];
 
                                 $media[] = [
-                                    'url' => $this->api->articleDocumentEndpoint($document['artikelcode'], $document['id']),
+                                    'url' => $this->api->articleDocumentEndpoint(
+                                        $document['artikelcode'],
+                                        $document['id']
+                                    ),
                                     'filestream' => $documentResponse->getBody()->getContents(),
                                     'filename' => $filename,
                                     'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),

@@ -78,6 +78,7 @@ add_action('visual_renting_dynamics_sync', function ($plugin) {
     });
 
     $plugin->singleton('custom-checkout-fields', function ($plugin, $args) {
+        $clientReferenceCharacterLimit = 50;
         return apply_filters('visual_renting_dynamics_custom_checkout_fields', collect([
             'event' => [
                 'label' => __('Event details', 'visual-renting-dynamics-sync'),
@@ -119,9 +120,17 @@ add_action('visual_renting_dynamics_sync', function ($plugin) {
                 'fields' => [
                     'vrd_client_reference' => [
                         'type' => 'text',
-                        'label' => __('Client reference', 'visual-renting-dynamics-sync'),
+                        'label' => sprintf(
+                            '%s %s',
+                            __('Client reference', 'visual-renting-dynamics-sync'),
+                            sprintf(
+                                __('(max. %s characters)', 'visual-renting-dynamics-sync'),
+                                $clientReferenceCharacterLimit
+                            )
+                        ),
                         'input_class' => ['form-control'],
                         'default' => WC()->session ? WC()->session->get('vrd_client_reference') : '',
+                        'maxlength' => $clientReferenceCharacterLimit,
                     ],
                 ],
             ]

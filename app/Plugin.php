@@ -72,15 +72,15 @@ class Plugin extends Container
         $customEmailsClasses = collect(glob(__DIR__ . '/WooCommerce/Emails/*.php'))
             ->map(fn ($file) => pathinfo($file, PATHINFO_FILENAME));
 
-        add_filter('woocommerce_email_classes', function($emailClasses) use ($customEmailsClasses) {
+        add_filter('woocommerce_email_classes', function ($emailClasses) use ($customEmailsClasses) {
             $customEmailsClasses
                 ->each(function ($class) use (&$emailClasses) {
-                    $emailClasses[$class] = $this->make("Otomaties\\VisualRentingDynamicsSync\\WooCommerce\\Emails\\{$class}");
+                    $emailClasses[$class] = $this->make("Otomaties\\VisualRentingDynamicsSync\\WooCommerce\\Emails\\{$class}"); // phpcs:ignore Generic.Files.LineLength.TooLong
                 });
             return $emailClasses;
         });
 
-        add_filter('woocommerce_email_actions', function($emailActions) use ($customEmailsClasses) {
+        add_filter('woocommerce_email_actions', function ($emailActions) use ($customEmailsClasses) {
             $customEmailsClasses
                 ->each(function ($class) use (&$emailActions) {
                     $status = Str::of($class)

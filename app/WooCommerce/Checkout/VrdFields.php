@@ -9,7 +9,7 @@ class VrdFields
 
     public function runHooks()
     {
-        $displayFieldsaction = apply_filters('visual_renting_dynamics_display_fields_action', 'woocommerce_checkout_before_order_review_heading');
+        $displayFieldsaction = apply_filters('visual_renting_dynamics_display_fields_action', 'woocommerce_checkout_before_order_review_heading'); // phpcs:ignore Generic.Files.LineLength.TooLong
         add_filter('woocommerce_checkout_posted_data', [$this, 'addCustomFieldsToPostedData']);
         add_action($displayFieldsaction, [$this, 'addCustomFields']);
         add_action('woocommerce_checkout_process', [$this, 'validateCustomFields']);

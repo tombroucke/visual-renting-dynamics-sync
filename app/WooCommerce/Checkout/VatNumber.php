@@ -9,10 +9,10 @@ class VatNumber
     {
         add_filter('woocommerce_billing_fields', [$this, 'addVatNumberField']);
         add_action('woocommerce_checkout_process', [$this, 'validateVatNumber']);
-        add_filter('woocommerce_order_formatted_billing_address', [$this, 'addVatNumberToAddress'], 10, 2 );
-        add_filter('woocommerce_formatted_address_replacements', [$this, 'formattedAddressReplacements'], 10, 2 );
-        add_filter('woocommerce_localisation_address_formats', [$this, 'localisationAddressFormat'], 10, 2 );
-        add_filter('woocommerce_my_account_my_address_formatted_address', [$this, 'addVatNumberToAddressInMyAccount'], 10, 3);
+        add_filter('woocommerce_order_formatted_billing_address', [$this, 'addVatNumberToAddress'], 10, 2);
+        add_filter('woocommerce_formatted_address_replacements', [$this, 'formattedAddressReplacements'], 10, 2);
+        add_filter('woocommerce_localisation_address_formats', [$this, 'localisationAddressFormat'], 10, 2);
+        add_filter('woocommerce_my_account_my_address_formatted_address', [$this, 'addVatNumberToAddressInMyAccount'], 10, 3); // phpcs:ignore Generic.Files.LineLength.TooLong
         add_filter('woocommerce_checkout_posted_data', [$this, 'formatVatNumber']);
     }
 
@@ -29,7 +29,8 @@ class VatNumber
         return $billingFields;
     }
 
-    public function validateVatNumber() {
+    public function validateVatNumber()
+    {
         if (!isset($_POST['billing_vat_number']) || $_POST['billing_vat_number'] == '') {
             return;
         }
@@ -39,7 +40,8 @@ class VatNumber
         }
     }
 
-    public function isVatNumberValid($vatNumber) {
+    public function isVatNumberValid($vatNumber)
+    {
         $cleanVatNumber = $this->cleanVatNumber($_POST['billing_vat_number']);
         $validator = new \Ibericode\Vat\Validator();
         $validFormat = $validator->validateVatNumberFormat($cleanVatNumber);
@@ -100,7 +102,8 @@ class VatNumber
         return 97 - ($checkDigits % 97) === $checkSum;
     }
 
-    public function formatVatNumber($data) {
+    public function formatVatNumber($data)
+    {
         if (isset($data['billing_vat_number'])) {
             $data['billing_vat_number'] = $this->cleanVatNumber($data['billing_vat_number']);
         }

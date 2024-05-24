@@ -3,7 +3,6 @@
 namespace Otomaties\VisualRentingDynamicsSync\WooCommerce;
 
 use Otomaties\VisualRentingDynamicsSync\Api;
-use Otomaties\VisualRentingDynamicsSync\Helpers\View;
 use Otomaties\VisualRentingDynamicsSync\Helpers\Assets;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout\OrderDetails;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout\VatNumber;
@@ -30,7 +29,7 @@ class Checkout
     {
         add_action('wp_enqueue_scripts', [$this, 'enqueueScripts'], 999);
 
-        add_filter('woocommerce_valid_order_statuses_for_payment_complete', [$this, 'removeFailedFromValidOrderStatusesForPaymentComplete']);
+        add_filter('woocommerce_valid_order_statuses_for_payment_complete', [$this, 'removeFailedFromValidOrderStatusesForPaymentComplete']); // phpcs:ignore Generic.Files.LineLength.TooLong
         add_filter('woocommerce_checkout_order_processed', [$this, 'requestOrder'], 9999, 3);
 
         add_filter('woocommerce_endpoint_order-received_title', [$this, 'orderReceivedTitle'], 10, 2);
@@ -38,11 +37,13 @@ class Checkout
         add_filter('woocommerce_email_heading_customer_processing_order', [$this, 'orderProcessingEmailHeading'], 10, 2); // phpcs:ignore Generic.Files.LineLength.TooLong
         add_filter('woocommerce_order_button_text', [$this, 'orderButtonText']);
         add_filter('woocommerce_cart_needs_shipping_address', '__return_true');
+        add_filter('woocommerce_checkout_fields', [$this, 'orderCommentMaxLength'], 9999);
 
         return $this;
     }
 
-    public function enqueueScripts() {
+    public function enqueueScripts()
+    {
         if (!function_exists('is_checkout') || !is_checkout()) {
             return;
         }
@@ -134,7 +135,9 @@ class Checkout
         }
 
         try {
-            $response = $this->api->requestOrder(apply_filters('visual_renting_dynamics_orderaanvraag_args', $args, $order));
+            $response = $this->api->requestOrder(
+                apply_filters('visual_renting_dynamics_orderaanvraag_args', $args, $order)
+            );
             if ($response->getStatusCode() === 200) {
                 $order->update_status('wc-quote-requested');
             }
@@ -186,7 +189,6 @@ class Checkout
         }
 
         return $text;
-
     }
 
     public function orderProcessingEmailHeading(string $heading, \WC_Order $order) : string
@@ -201,5 +203,13 @@ class Checkout
     public function orderButtonText(string $text) : string
     {
         return $this->cart->onlyRentalProductsInCart() ? __('Request quote', 'visual-renting-dynamics-sync') : $text;
+    }
+
+    public function orderCommentMaxLength($fields)
+    {
+        $limit = 5000;
+        $fields['order']['order_comments']['label'] = $fields['order']['order_comments']['label'] . sprintf(' ' . __('(max. %s characters)', 'visual-renting-dynamics-sync'), $limit); // phpcs:ignore Generic.Files.LineLength.TooLong
+        $fields['order']['order_comments']['maxlength'] = $limit;
+        return $fields;
     }
 }

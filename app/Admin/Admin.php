@@ -11,14 +11,15 @@ class Admin
     ) {
     }
 
-    public function runHooks () : self
+    public function runHooks() : self
     {
         add_action('woocommerce_admin_order_data_after_shipping_address', [$this, 'addCustomFieldsToOrderDetails']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueScripts'], 999);
         return $this;
     }
 
-    public function enqueueScripts() {
+    public function enqueueScripts()
+    {
         foreach ($this->assets->entrypoints()->admin->css as $css) {
             wp_enqueue_style(
                 'vrd-admin-' . $css,
@@ -29,7 +30,8 @@ class Admin
         }
     }
 
-    public function addCustomFieldsToOrderDetails($order) {
+    public function addCustomFieldsToOrderDetails($order)
+    {
         visualRentingDynamicSync()->make('custom-checkout-fields')
             ->pluck('fields')
             ->flatmap(function ($item) {

@@ -25,4 +25,3 @@ class Account
         return $columns;
     }
 }
-
