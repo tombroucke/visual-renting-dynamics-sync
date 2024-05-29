@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Visual Renting Dynamics Sync\n"
-"POT-Creation-Date: 2024-03-05 08:40+0100\n"
+"POT-Creation-Date: 2024-05-29 13:22+0200\n"
 "PO-Revision-Date: 2023-12-28 09:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -62,52 +62,52 @@ msgstr ""
 msgid "View quote request"
 msgstr ""
 
-#: app/WooCommerce/Cart.php:114
+#: app/WooCommerce/Cart.php:114 app/WooCommerce/Checkout/OrderDetails.php:72
 msgid "On request"
 msgstr ""
 
 #. translators: %s: error message
-#: app/WooCommerce/Checkout.php:146
+#: app/WooCommerce/Checkout.php:149
 #, php-format
 msgid "Error requesting quote: %s"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:164
-#: app/WooCommerce/Emails/CustomerQuoteRequested.php:47
+#: app/WooCommerce/Checkout.php:167
+#: app/WooCommerce/Emails/CustomerQuoteRequested.php:49
 msgid "Thank you for your quote request"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:168
+#: app/WooCommerce/Checkout.php:171
 msgid "Something went wrong."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:181
+#: app/WooCommerce/Checkout.php:184
 msgid ""
 "We have received your quote request. We will contact you as soon as possible."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:185
+#: app/WooCommerce/Checkout.php:188
 msgid "Something went wrong during your quote request. Please contact us."
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:198
+#: app/WooCommerce/Checkout.php:200
 msgid "Your quote request is being processed"
 msgstr ""
 
-#: app/WooCommerce/Checkout.php:203
+#: app/WooCommerce/Checkout.php:205
 msgid "Request quote"
 msgstr ""
 
-#: app/WooCommerce/Checkout/OrderDetails.php:74
-#: app/WooCommerce/RentalProduct.php:54
-msgid "Price on request"
+#: app/WooCommerce/Checkout.php:211 visual-renting-dynamics-sync.php:127
+#, php-format
+msgid "(max. %s characters)"
 msgstr ""
 
 #: app/WooCommerce/Checkout/VatNumber.php:22
 msgid "VAT number"
 msgstr ""
 
-#: app/WooCommerce/Checkout/VatNumber.php:38
+#: app/WooCommerce/Checkout/VatNumber.php:39
 msgid "This VAT number seems invalid"
 msgstr ""
 
@@ -129,11 +129,11 @@ msgid ""
 "details."
 msgstr ""
 
-#: app/WooCommerce/Emails/CustomerQuoteRequested.php:37
+#: app/WooCommerce/Emails/CustomerQuoteRequested.php:38
 msgid "We received your quote request!"
 msgstr ""
 
-#: app/WooCommerce/Emails/CustomerQuoteRequested.php:116
+#: app/WooCommerce/Emails/CustomerQuoteRequested.php:122
 msgid "Thanks for using {site_url}!"
 msgstr ""
 
@@ -148,79 +148,79 @@ msgstr ""
 msgid "Failed quote request"
 msgstr ""
 
-#: app/WooCommerce/Emails/QuoteFailed.php:37
+#: app/WooCommerce/Emails/QuoteFailed.php:38
 msgid "[{site_title}]: Quote request failed #{order_number}"
 msgstr ""
 
-#: app/WooCommerce/Emails/QuoteFailed.php:47
+#: app/WooCommerce/Emails/QuoteFailed.php:49
 msgid "Failed quote request: #{order_number}"
 msgstr ""
 
-#: app/WooCommerce/Emails/QuoteFailed.php:125
+#: app/WooCommerce/Emails/QuoteFailed.php:131
 msgid "Something went wrong during a quote request"
 msgstr ""
 
 #. translators: %s: list of placeholders
-#: app/WooCommerce/Emails/QuoteFailed.php:150
-#: app/WooCommerce/Emails/QuoteRequested.php:150
+#: app/WooCommerce/Emails/QuoteFailed.php:158
+#: app/WooCommerce/Emails/QuoteRequested.php:158
 #, php-format
 msgid "Available placeholders: %s"
 msgstr ""
 
-#: app/WooCommerce/Emails/QuoteFailed.php:153
-#: app/WooCommerce/Emails/QuoteRequested.php:153
+#: app/WooCommerce/Emails/QuoteFailed.php:161
+#: app/WooCommerce/Emails/QuoteRequested.php:161
 msgid "Enable/Disable"
 msgstr ""
 
-#: app/WooCommerce/Emails/QuoteFailed.php:155
-#: app/WooCommerce/Emails/QuoteRequested.php:155
+#: app/WooCommerce/Emails/QuoteFailed.php:163
+#: app/WooCommerce/Emails/QuoteRequested.php:163
 msgid "Enable this email notification"
 msgstr ""
 
-#: app/WooCommerce/Emails/QuoteFailed.php:159
-#: app/WooCommerce/Emails/QuoteRequested.php:159
+#: app/WooCommerce/Emails/QuoteFailed.php:167
+#: app/WooCommerce/Emails/QuoteRequested.php:167
 msgid "Recipient(s)"
 msgstr ""
 
 #. translators: %s: WP admin email
-#: app/WooCommerce/Emails/QuoteFailed.php:162
-#: app/WooCommerce/Emails/QuoteRequested.php:162
+#: app/WooCommerce/Emails/QuoteFailed.php:170
+#: app/WooCommerce/Emails/QuoteRequested.php:170
 #, php-format
 msgid "Enter recipients (comma separated) for this email. Defaults to %s."
 msgstr ""
 
-#: app/WooCommerce/Emails/QuoteFailed.php:168
-#: app/WooCommerce/Emails/QuoteRequested.php:168
-msgid "Subject"
-msgstr ""
-
 #: app/WooCommerce/Emails/QuoteFailed.php:176
 #: app/WooCommerce/Emails/QuoteRequested.php:176
-msgid "Email heading"
+msgid "Subject"
 msgstr ""
 
 #: app/WooCommerce/Emails/QuoteFailed.php:184
 #: app/WooCommerce/Emails/QuoteRequested.php:184
+msgid "Email heading"
+msgstr ""
+
+#: app/WooCommerce/Emails/QuoteFailed.php:192
+#: app/WooCommerce/Emails/QuoteRequested.php:192
 msgid "Additional content"
-msgstr ""
-
-#: app/WooCommerce/Emails/QuoteFailed.php:185
-#: app/WooCommerce/Emails/QuoteRequested.php:185
-msgid "Text to appear below the main email content."
-msgstr ""
-
-#: app/WooCommerce/Emails/QuoteFailed.php:187
-#: app/WooCommerce/Emails/QuoteRequested.php:187
-msgid "N/A"
 msgstr ""
 
 #: app/WooCommerce/Emails/QuoteFailed.php:193
 #: app/WooCommerce/Emails/QuoteRequested.php:193
-msgid "Email type"
+msgid "Text to appear below the main email content."
 msgstr ""
 
 #: app/WooCommerce/Emails/QuoteFailed.php:195
 #: app/WooCommerce/Emails/QuoteRequested.php:195
+msgid "N/A"
+msgstr ""
+
+#: app/WooCommerce/Emails/QuoteFailed.php:201
+#: app/WooCommerce/Emails/QuoteRequested.php:201
+msgid "Email type"
+msgstr ""
+
+#: app/WooCommerce/Emails/QuoteFailed.php:203
+#: app/WooCommerce/Emails/QuoteRequested.php:203
 msgid "Choose which format of email to send."
 msgstr ""
 
@@ -236,15 +236,15 @@ msgid ""
 "mail is sent to the shop administrator."
 msgstr ""
 
-#: app/WooCommerce/Emails/QuoteRequested.php:37
+#: app/WooCommerce/Emails/QuoteRequested.php:38
 msgid "[{site_title}]: New quote request #{order_number}"
 msgstr ""
 
-#: app/WooCommerce/Emails/QuoteRequested.php:47
+#: app/WooCommerce/Emails/QuoteRequested.php:49
 msgid "New quote request: #{order_number}"
 msgstr ""
 
-#: app/WooCommerce/Emails/QuoteRequested.php:125
+#: app/WooCommerce/Emails/QuoteRequested.php:131
 msgid "Congratulations on the quote request."
 msgstr ""
 
@@ -255,6 +255,10 @@ msgstr ""
 
 #: app/WooCommerce/Product.php:59
 msgid "Add to quote request"
+msgstr ""
+
+#: app/WooCommerce/RentalProduct.php:54
+msgid "Price on request"
 msgstr ""
 
 #: app/WooCommerce/StatusRegistrar.php:17
@@ -273,43 +277,43 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:83
+#: visual-renting-dynamics-sync.php:84
 msgid "Event details"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:87
+#: visual-renting-dynamics-sync.php:88
 msgid "Shipping method"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:90
+#: visual-renting-dynamics-sync.php:91
 msgid "Choose an option"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:91
+#: visual-renting-dynamics-sync.php:92
 msgid "Pickup"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:92
+#: visual-renting-dynamics-sync.php:93
 msgid "Delivery"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:99 visual-renting-dynamics-sync.php:104
+#: visual-renting-dynamics-sync.php:100 visual-renting-dynamics-sync.php:105
 msgid "Shipping date"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:105
+#: visual-renting-dynamics-sync.php:106
 msgid "Pickup date"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:110
+#: visual-renting-dynamics-sync.php:111
 msgid "Return date"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:118
+#: visual-renting-dynamics-sync.php:119
 msgid "Client details"
 msgstr ""
 
-#: visual-renting-dynamics-sync.php:122
+#: visual-renting-dynamics-sync.php:125
 msgid "Client reference"
 msgstr ""
 
