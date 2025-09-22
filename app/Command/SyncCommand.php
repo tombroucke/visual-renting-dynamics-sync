@@ -2,6 +2,7 @@
 
 namespace Otomaties\VisualRentingDynamicsSync\Command;
 
+use Otomaties\VisualRentingDynamicsSync\Helpers\CachingPlugins;
 use Otomaties\VisualRentingDynamicsSync\Services\ArticleSyncService;
 use Otomaties\VisualRentingDynamicsSync\Services\CategorySyncService;
 use Otomaties\VisualRentingDynamicsSync\Command\Contracts\CommandContract;
@@ -31,6 +32,7 @@ class SyncCommand implements CommandContract
     public function __construct(
         private CategorySyncService $categorySyncService,
         private ArticleSyncService $articleSyncService,
+        private CachingPlugins $cachingPlugins,
     ) {
     }
 
@@ -49,6 +51,8 @@ class SyncCommand implements CommandContract
 
         $this->categorySyncService->run($args, $assocArgs);
         $this->articleSyncService->run($args, $assocArgs);
+
+        $this->cachingPlugins->clearPageCache();
 
         \WP_CLI::success('Synced all categories and articles from Visual Renting Dynamics');
     }
