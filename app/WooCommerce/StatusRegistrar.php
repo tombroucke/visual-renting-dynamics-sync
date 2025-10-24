@@ -6,24 +6,25 @@ use Illuminate\Support\Str;
 
 class StatusRegistrar
 {
-    private function mergeDefault(array $customStatus) : array
+    private function mergeDefault(array $customStatus): array
     {
         $defaultArgs = [
-            'label'                     => 'custom-status',
-            'public'                    => true,
-            'exclude_from_search'       => false,
-            'show_in_admin_all_list'    => true,
+            'label' => 'custom-status',
+            'public' => true,
+            'exclude_from_search' => false,
+            'show_in_admin_all_list' => true,
             'show_in_admin_status_list' => true,
-            'label_count'               => _n_noop('%s <span class="count">(%s)</span>', '%s <span class="count">(%s)</span>') // phpcs:ignore Generic.Files.LineLength.TooLong
+            'label_count' => _n_noop('%s <span class="count">(%s)</span>', '%s <span class="count">(%s)</span>'), // phpcs:ignore Generic.Files.LineLength.TooLong
         ];
+
         return array_merge($defaultArgs, $customStatus);
     }
 
-    public function add(string $customStatusName, array $customStatus) : self
+    public function add(string $customStatusName, array $customStatus): self
     {
         $customStatus = $this->mergeDefault($customStatus);
         register_post_status($customStatusName, $customStatus);
-        
+
         add_filter(
             'wc_order_statuses',
             function ($orderStatuses) use ($customStatusName, $customStatus) {
@@ -58,6 +59,7 @@ class StatusRegistrar
                     return $redirect;
                 }
                 $this->updateOrderStatus($customStatusName, $postIds);
+
                 return $redirect;
             },
             10,
@@ -67,13 +69,14 @@ class StatusRegistrar
         return $this;
     }
 
-    public function addOrderStatuses(array $orderStatuses, string $customStatusName, string $label) : array
+    public function addOrderStatuses(array $orderStatuses, string $customStatusName, string $label): array
     {
         $orderStatuses[$customStatusName] = $label;
+
         return $orderStatuses;
     }
 
-    public function updateOrderStatus(string $customStatusName, array $postIds) : void
+    public function updateOrderStatus(string $customStatusName, array $postIds): void
     {
         foreach ($postIds as $postId) {
             wc_get_order($postId)

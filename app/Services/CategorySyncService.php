@@ -3,15 +3,13 @@
 namespace Otomaties\VisualRentingDynamicsSync\Services;
 
 use Monolog\Logger;
-use Otomaties\WpSyncPosts\Media;
 use Otomaties\VisualRentingDynamicsSync\Api;
 use Otomaties\VisualRentingDynamicsSync\Services\Contracts\Runnable;
+use Otomaties\WpSyncPosts\Media;
 
 class CategorySyncService implements Runnable
 {
-    public function __construct(private Api $api, private Logger $logger)
-    {
-    }
+    public function __construct(private Api $api, private Logger $logger) {}
 
     public function run(array $args, array $assocArgs): void
     {
@@ -22,9 +20,9 @@ class CategorySyncService implements Runnable
         $this->syncSubSubCategories($skipImages);
     }
 
-    private function syncCategories(bool $skipImages) : void
+    private function syncCategories(bool $skipImages): void
     {
-        \WP_CLI::line("Fetching all categories from Visual Renting Dynamics API");
+        \WP_CLI::line('Fetching all categories from Visual Renting Dynamics API');
         $this->api->categories()
             ->reject(
                 function ($category) {
@@ -34,19 +32,20 @@ class CategorySyncService implements Runnable
             ->each(
                 function ($category) use ($skipImages) {
                     $args = [
-                        'id' => 'category_' . $category['id'],
+                        'id' => 'category_'.$category['id'],
                         'name' => $category['categorienaam'],
                     ];
-                    if (!$skipImages) {
+                    if (! $skipImages) {
                         $args['thumbnail_id'] = $this->fetchImagefromCategory($category);
                     }
                     $this->upsertTerm($args);
                 }
             );
     }
-    private function syncSubcategories(bool $skipImages) : void
+
+    private function syncSubcategories(bool $skipImages): void
     {
-        \WP_CLI::line("Fetching all subcategories from Visual Renting Dynamics API");
+        \WP_CLI::line('Fetching all subcategories from Visual Renting Dynamics API');
 
         $this->api->subcategories()
             ->reject(
@@ -57,34 +56,35 @@ class CategorySyncService implements Runnable
             ->filter(
                 function ($subCategory) {
                     $parentCategory = $this->findProductCategoriesByExternalId(
-                        'category_' . $subCategory['categorieId']
+                        'category_'.$subCategory['categorieId']
                     );
-                    return !is_wp_error($parentCategory) && !empty($parentCategory);
+
+                    return ! is_wp_error($parentCategory) && ! empty($parentCategory);
                 }
             )
             ->each(
                 function ($subCategory) use ($skipImages) {
                     $parentCategory = $this->findProductCategoriesByExternalId(
-                        'category_' . $subCategory['categorieId']
+                        'category_'.$subCategory['categorieId']
                     );
                     $args = [
-                        'id' => 'subcategory_' . $subCategory['id'],
+                        'id' => 'subcategory_'.$subCategory['id'],
                         'name' => $subCategory['subcategorienaam'],
                         'parent' => $parentCategory[0]->term_id,
                     ];
 
-                    if (!$skipImages) {
+                    if (! $skipImages) {
                         $args['thumbnail_id'] = $this->fetchImagefromCategory($subCategory, 1);
                     }
-                
+
                     $this->upsertTerm($args);
                 }
             );
     }
 
-    private function syncSubSubCategories(bool $skipImages) : void
+    private function syncSubSubCategories(bool $skipImages): void
     {
-        \WP_CLI::line("Fetching all subsubcategories from Visual Renting Dynamics API");
+        \WP_CLI::line('Fetching all subsubcategories from Visual Renting Dynamics API');
 
         $this->api->subsubcategories()
             ->reject(
@@ -95,24 +95,25 @@ class CategorySyncService implements Runnable
             ->filter(
                 function ($subSubCategory) {
                     $parentCategory = $this->findProductCategoriesByExternalId(
-                        'subcategory_' . $subSubCategory['subcategorieId']
+                        'subcategory_'.$subSubCategory['subcategorieId']
                     );
-                    return !is_wp_error($parentCategory) && !empty($parentCategory);
+
+                    return ! is_wp_error($parentCategory) && ! empty($parentCategory);
                 }
             )
             ->each(
                 function ($subSubCategory) use ($skipImages) {
                     $parentCategory = $this->findProductCategoriesByExternalId(
-                        'subcategory_' . $subSubCategory['subcategorieId']
+                        'subcategory_'.$subSubCategory['subcategorieId']
                     );
 
                     $args = [
-                        'id' => 'subsubcategory_' . $subSubCategory['id'],
+                        'id' => 'subsubcategory_'.$subSubCategory['id'],
                         'name' => $subSubCategory['subsubcategorienaam'],
                         'parent' => $parentCategory[0]->term_id,
                     ];
 
-                    if (!$skipImages) {
+                    if (! $skipImages) {
                         $args['thumbnail_id'] = $this->fetchImagefromCategory($subSubCategory, 2);
                     }
 
@@ -121,7 +122,7 @@ class CategorySyncService implements Runnable
             );
     }
 
-    private function findProductCategoriesByExternalId(string $externalId) : array
+    private function findProductCategoriesByExternalId(string $externalId): array
     {
         return get_terms(
             [
@@ -137,7 +138,7 @@ class CategorySyncService implements Runnable
         );
     }
 
-    private function fetchImagefromCategory(array $category, int $depth = 0) : ?int
+    private function fetchImagefromCategory(array $category, int $depth = 0): ?int
     {
         $endpoints = [
             [
@@ -154,56 +155,60 @@ class CategorySyncService implements Runnable
             ],
         ];
 
-        if (!$category['bevatAfbeelding']) {
+        if (! $category['bevatAfbeelding']) {
             $categoryNameKey = $endpoints[$depth]['key'];
             $this->logger->info("Category {$category[$categoryNameKey]} ({$category['id']}) does not contain an image");
+
             return null;
         }
 
-        $imageResponse = $this->api->{$endpoints[$depth]['name'] . 'Image'}($category['id']);
+        $imageResponse = $this->api->{$endpoints[$depth]['name'].'Image'}($category['id']);
         $contentDisposition = $imageResponse->getHeader('Content-Disposition');
-        $filename = str_replace("\"", "", explode('filename=', $contentDisposition[0])[1]);
+        $filename = str_replace('"', '', explode('filename=', $contentDisposition[0])[1]);
 
         $image = new Media(
             [
-                'url' => $this->api->{$endpoints[$depth]['name'] . 'ImageEndpoint'}($category['id']),
+                'url' => $this->api->{$endpoints[$depth]['name'].'ImageEndpoint'}($category['id']),
                 'filestream' => $imageResponse->getBody()->getContents(),
                 'filename' => $filename,
                 'title' => strtok(pathinfo($filename, PATHINFO_FILENAME), '?'),
                 'date_modified' => $category['afbeeldingLaatstGewijzigdOp'],
-                'group' => 'synced_images'
+                'group' => 'synced_images',
             ]
         );
 
         $imageId = $image->importAndAttachToPost();
 
-        if (!is_numeric($imageId)) {
+        if (! is_numeric($imageId)) {
             $this->logger->error("Error importing image for category {$category['categorienaam']} ({$category['id']})");
+
             return null;
         }
 
         return $imageId;
     }
 
-    private function insertTerm(array $termArgs) : ?\WP_Term
+    private function insertTerm(array $termArgs): ?\WP_Term
     {
         $termArray = wp_insert_term($termArgs['name'], 'product_cat', $termArgs);
 
         if (is_wp_error($termArray)) {
             $this->logger->error("Error inserting term {$termArgs['name']}, error: {$termArray->get_error_message()}");
+
             return null;
         }
 
         update_term_meta($termArray['term_id'], 'external_id', $termArgs['id'], true);
+
         return get_term($termArray['term_id'], 'product_cat');
     }
 
-    private function upsertTerm(array $termArgs) : ?\WP_Term
+    private function upsertTerm(array $termArgs): ?\WP_Term
     {
         $foundTerms = $this->findProductCategoriesByExternalId($termArgs['id']);
         $term = empty($foundTerms) ? $this->insertTerm($termArgs) : $foundTerms[0];
 
-        if (!$term) {
+        if (! $term) {
             return null;
         }
 

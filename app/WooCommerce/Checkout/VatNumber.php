@@ -4,7 +4,6 @@ namespace Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout;
 
 class VatNumber
 {
-
     public function runHooks()
     {
         add_filter('woocommerce_billing_fields', [$this, 'addVatNumberField']);
@@ -16,14 +15,14 @@ class VatNumber
         add_filter('woocommerce_checkout_posted_data', [$this, 'formatVatNumber']);
     }
 
-    public function addVatNumberField(array $billingFields) : array
+    public function addVatNumberField(array $billingFields): array
     {
         $billingFields['billing_vat_number'] = [
             'label' => __('VAT number', 'visual-renting-dynamics-sync'),
             'required' => false,
             'class' => ['form-row-wide'],
             'clear' => true,
-            'priority' => 35
+            'priority' => 35,
         ];
 
         return $billingFields;
@@ -31,11 +30,11 @@ class VatNumber
 
     public function validateVatNumber()
     {
-        if (!isset($_POST['billing_vat_number']) || $_POST['billing_vat_number'] == '') {
+        if (! isset($_POST['billing_vat_number']) || $_POST['billing_vat_number'] == '') {
             return;
         }
 
-        if (!$this->isVatNumberValid($_POST['billing_vat_number'])) {
+        if (! $this->isVatNumberValid($_POST['billing_vat_number'])) {
             wc_add_notice(__('This VAT number seems invalid', 'eetoile'), 'error');
         }
     }
@@ -43,27 +42,30 @@ class VatNumber
     public function isVatNumberValid($vatNumber)
     {
         $cleanVatNumber = $this->cleanVatNumber($_POST['billing_vat_number']);
-        $validator = new \Ibericode\Vat\Validator();
+        $validator = new \Ibericode\Vat\Validator;
         $validFormat = $validator->validateVatNumberFormat($cleanVatNumber);
-        $validModulo97 = $this->validateModulo97(preg_replace("/[^0-9]/", "", $cleanVatNumber));
+        $validModulo97 = $this->validateModulo97(preg_replace('/[^0-9]/', '', $cleanVatNumber));
+
         return $validFormat && $validModulo97;
     }
 
     public function addVatNumberToAddress($fields, $order)
     {
         $fields['vat_number'] = $order->get_meta('_billing_vat_number');
+
         return $fields;
     }
 
     public function formattedAddressReplacements($address, $args)
     {
         $address['{vat_number}'] = '';
-        $address['{vat_vat_number_upper}']= '';
+        $address['{vat_vat_number_upper}'] = '';
 
         if (! empty($args['vat_number'])) {
             $address['{vat_number}'] = $args['vat_number'];
             $address['{vat_vat_number_upper}'] = strtoupper($args['vat_number']);
         }
+
         return $address;
     }
 
@@ -72,6 +74,7 @@ class VatNumber
         foreach ($formats as $country => $format) {
             $formats[$country] = str_replace("{company}\n", "{company}\n{vat_number}\n", $format);
         }
+
         return $formats;
     }
 
@@ -80,7 +83,7 @@ class VatNumber
         if ($type == 'billing') {
             $fields['vat_number'] = get_user_meta($customer_id, 'billing_vat_number', true);
         }
-    
+
         return $fields;
     }
 
@@ -92,13 +95,15 @@ class VatNumber
         $vatNumber = str_replace(',', '', $vatNumber);
         $vatNumber = str_replace('/', '', $vatNumber);
         $vatNumber = strtoupper($vatNumber);
+
         return $vatNumber;
     }
 
     private function validateModulo97(string $vatNumber)
     {
-        $checkDigits = (int)substr($vatNumber, 0, 8);
-        $checkSum = (int)substr($vatNumber, -2);
+        $checkDigits = (int) substr($vatNumber, 0, 8);
+        $checkSum = (int) substr($vatNumber, -2);
+
         return 97 - ($checkDigits % 97) === $checkSum;
     }
 
@@ -107,6 +112,7 @@ class VatNumber
         if (isset($data['billing_vat_number'])) {
             $data['billing_vat_number'] = $this->cleanVatNumber($data['billing_vat_number']);
         }
+
         return $data;
     }
 }

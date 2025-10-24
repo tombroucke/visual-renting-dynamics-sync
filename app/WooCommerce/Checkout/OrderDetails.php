@@ -24,16 +24,16 @@ class OrderDetails
             ->map(function ($field, $fieldName) use (&$fields, $order) {
                 return [
                     'label' => $field['label'],
-                    'value' => $this->beautifyFieldValue($fieldName, $order->get_meta($fieldName), $field)
+                    'value' => $this->beautifyFieldValue($fieldName, $order->get_meta($fieldName), $field),
                 ];
             })
             ->reject(function ($field) {
                 return empty($field['value']) || $field['value'] === '';
             });
-        
+
         visualRentingDynamicSync()->make(View::class)->render('order/order-details', [
             'order' => $order,
-            'fields' => apply_filters('visual_renting_dynamics_order_details_fields', $fields, $order)
+            'fields' => apply_filters('visual_renting_dynamics_order_details_fields', $fields, $order),
         ]);
     }
 
@@ -43,12 +43,13 @@ class OrderDetails
             return $value;
         }
 
-        if ('vrd_shipping_method' === $fieldName && isset($fieldSettings['options'][$value])) {
+        if ($fieldName === 'vrd_shipping_method' && isset($fieldSettings['options'][$value])) {
             return $fieldSettings['options'][$value];
         }
 
         if (strpos($fieldName, '_date') !== false) {
             $dateTime = DateTime::createFromFormat('Y-m-d', $value);
+
             return date_i18n(get_option('date_format'), $dateTime->format('U'));
         }
 
@@ -59,7 +60,7 @@ class OrderDetails
     {
         $product = $item->get_product();
 
-        if (!$product) {
+        if (! $product) {
             return $subtotal;
         }
 

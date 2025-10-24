@@ -2,7 +2,6 @@
 
 namespace Otomaties\VisualRentingDynamicsSync\Command;
 
-use Otomaties\VisualRentingDynamicsSync\Command\SyncCommand;
 use Illuminate\Container\Container;
 
 class CommandRegistrar
@@ -13,7 +12,7 @@ class CommandRegistrar
 
     public function __construct(public Container $container)
     {
-        if (!defined('WP_CLI') || !WP_CLI) {
+        if (! defined('WP_CLI') || ! WP_CLI) {
             return;
         }
 
@@ -25,8 +24,8 @@ class CommandRegistrar
                     $commandInstance->handle($args, $assocArgs);
                 },
                 [
-                'shortdesc' => $commandClass::COMMAND_DESCRIPTION,
-                'synopsis' => $commandClass::COMMAND_ARGUMENTS,
+                    'shortdesc' => $commandClass::COMMAND_DESCRIPTION,
+                    'synopsis' => $commandClass::COMMAND_ARGUMENTS,
                 ]
             );
         }

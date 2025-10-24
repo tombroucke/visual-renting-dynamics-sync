@@ -7,7 +7,6 @@ use Otomaties\VisualRentingDynamicsSync\Helpers\Assets;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout\OrderDetails;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout\VatNumber;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout\VrdFields;
-use Otomaties\VisualRentingDynamicsSync\WooCommerce\RentalProduct;
 
 class Checkout
 {
@@ -21,11 +20,11 @@ class Checkout
             VatNumber::class,
             VrdFields::class,
         ])
-            ->map(fn ($class) => new $class())
+            ->map(fn ($class) => new $class)
             ->each(fn ($class) => $class->runHooks());
     }
 
-    public function runHooks() : self
+    public function runHooks(): self
     {
         add_action('wp_enqueue_scripts', [$this, 'enqueueScripts'], 999);
 
@@ -44,55 +43,55 @@ class Checkout
 
     public function enqueueScripts()
     {
-        if (!function_exists('is_checkout') || !is_checkout()) {
+        if (! function_exists('is_checkout') || ! is_checkout()) {
             return;
         }
-        
+
         if (property_exists($this->assets->entrypoints()->checkout, 'js')) {
             foreach ($this->assets->entrypoints()->checkout->js as $js) {
-                wp_enqueue_script('vrd-checkout-' . $js, $this->assets->url($js), [], null, true);
-                
+                wp_enqueue_script('vrd-checkout-'.$js, $this->assets->url($js), [], null, true);
+
                 $localize = apply_filters('visual_renting_dynamics_checkout_localize', [
                     'shipping_date' => [
                         'min_date' => 'today',
-                        'disabled_days' => []
+                        'disabled_days' => [],
                     ],
                     'return_date' => [
                         'min_date' => 'today',
-                        'disabled_days' => []
-                    ]
+                        'disabled_days' => [],
+                    ],
                 ], $js);
-                wp_localize_script('vrd-checkout-' . $js, 'vrd_checkout_vars', $localize);
+                wp_localize_script('vrd-checkout-'.$js, 'vrd_checkout_vars', $localize);
             }
         }
-        
+
         if (property_exists($this->assets->entrypoints()->checkout, 'css')) {
             foreach ($this->assets->entrypoints()->checkout->css as $css) {
-                wp_enqueue_style('vrd-checkout-' . $css, $this->assets->url($css), [], null);
+                wp_enqueue_style('vrd-checkout-'.$css, $this->assets->url($css), [], null);
             }
         }
     }
 
-    public function removeFailedFromValidOrderStatusesForPaymentComplete(array $statuses) : array
+    public function removeFailedFromValidOrderStatusesForPaymentComplete(array $statuses): array
     {
         return array_diff($statuses, ['failed']);
     }
 
-    public function requestOrder(int $orderId, array $postedData, \WC_Order $order) : void
+    public function requestOrder(int $orderId, array $postedData, \WC_Order $order): void
     {
         $shippingDate = \DateTime::createFromFormat('Y-m-d', $postedData['vrd_shipping_date']);
         $returnDate = \DateTime::createFromFormat('Y-m-d', $postedData['vrd_return_date']);
         $clientReference = $postedData['vrd_client_reference'] ?? null;
         $isDelivery = $order->get_meta('vrd_shipping_method') === 'delivery';
-        $name = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
+        $name = $order->get_billing_first_name().' '.$order->get_billing_last_name();
 
-        $countries_instance = new \WC_Countries();
+        $countries_instance = new \WC_Countries;
         $billingCountryCode = $order->get_billing_country();
-        
+
         $args = [
             'naam' => $order->get_billing_company() ? $order->get_billing_company() : $name,
             'contactpersoon' => $name,
-            'adres' => $order->get_billing_address_1() . ' ' . $order->get_billing_address_2(),
+            'adres' => $order->get_billing_address_1().' '.$order->get_billing_address_2(),
             'postcode' => $order->get_billing_postcode(),
             'plaats' => $order->get_billing_city(),
             'land' => $countries_instance->get_countries()[$billingCountryCode] ?? $billingCountryCode,
@@ -117,15 +116,15 @@ class Checkout
         if ($isDelivery) {
             $shippingCountryCode = $order->get_shipping_country();
             $args['contactpersoonLevering'] = $name;
-            $args['adresLevering'] = $order->get_shipping_address_1() . ' ' . $order->get_shipping_address_2();
+            $args['adresLevering'] = $order->get_shipping_address_1().' '.$order->get_shipping_address_2();
             $args['postcodeLevering'] = $order->get_shipping_postcode();
             $args['plaatsLevering'] = $order->get_shipping_city();
             $args['landLevering'] = $countries_instance->get_countries()[$shippingCountryCode] ?? $shippingCountryCode;
         }
-        
+
         foreach ($order->get_items() as $item) {
             $product = $item->get_product();
-            
+
             if ($product instanceof RentalProduct) {
                 $args['artikelen'][] = [
                     'artikelcode' => $product->get_sku(),
@@ -153,14 +152,14 @@ class Checkout
         }
     }
 
-    public function orderReceivedTitle(string $title, string $endpoint) : string
+    public function orderReceivedTitle(string $title, string $endpoint): string
     {
         global $wp;
 
-        if (!isset($wp->query_vars['order-received'])) {
+        if (! isset($wp->query_vars['order-received'])) {
             return $title;
-        };
-        
+        }
+
         $order = wc_get_order($wp->query_vars['order-received']);
 
         if ($endpoint === 'order-received' && $order && $order->has_status('quote-requested')) {
@@ -174,12 +173,12 @@ class Checkout
         return $title;
     }
 
-    public function orderReceivedText(string $text, ?\WC_Order $order) : string
+    public function orderReceivedText(string $text, ?\WC_Order $order): string
     {
-        if (!$order) {
+        if (! $order) {
             return $text;
         }
-        
+
         if ($order->has_status('quote-requested')) {
             return __('We have received your quote request. We will contact you as soon as possible.', 'visual-renting-dynamics-sync'); // phpcs:ignore Generic.Files.LineLength.TooLong
         }
@@ -191,16 +190,16 @@ class Checkout
         return $text;
     }
 
-    public function orderProcessingEmailHeading(string $heading, \WC_Order $order) : string
+    public function orderProcessingEmailHeading(string $heading, \WC_Order $order): string
     {
-        if (!$order->has_status('quote-requested')) {
+        if (! $order->has_status('quote-requested')) {
             return $heading;
         }
 
         return __('Your quote request is being processed', 'visual-renting-dynamics-sync');
     }
 
-    public function orderButtonText(string $text) : string
+    public function orderButtonText(string $text): string
     {
         return $this->cart->onlyRentalProductsInCart() ? __('Request quote', 'visual-renting-dynamics-sync') : $text;
     }
@@ -208,8 +207,9 @@ class Checkout
     public function orderCommentMaxLength($fields)
     {
         $limit = 5000;
-        $fields['order']['order_comments']['label'] = $fields['order']['order_comments']['label'] . sprintf(' ' . __('(max. %s characters)', 'visual-renting-dynamics-sync'), $limit); // phpcs:ignore Generic.Files.LineLength.TooLong
+        $fields['order']['order_comments']['label'] = $fields['order']['order_comments']['label'].sprintf(' '.__('(max. %s characters)', 'visual-renting-dynamics-sync'), $limit); // phpcs:ignore Generic.Files.LineLength.TooLong
         $fields['order']['order_comments']['maxlength'] = $limit;
+
         return $fields;
     }
 }

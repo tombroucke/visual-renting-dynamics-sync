@@ -1,19 +1,21 @@
-<?php declare(strict_types=1);
+<?php
 
-use PHPUnit\Framework\TestCase;
+declare(strict_types=1);
+
 use Otomaties\VisualRentingDynamicsSync\Helpers\View;
+use PHPUnit\Framework\TestCase;
 
 final class ViewTest extends TestCase
 {
-    public function testIncorrectPathThrowsException(): void
+    public function test_incorrect_path_throws_exception(): void
     {
         $this->expectException(Otomaties\VisualRentingDynamicsSync\Exceptions\ViewNotFoundException::class);
         $this->expectExceptionMessage('View not found: tests/views/incorrect/path/path.php');
         $view = new View('tests/views/');
         $view->render('incorrect/path/path');
     }
-    
-    public function testCorrectPathDoesNotThrowException(): void
+
+    public function test_correct_path_does_not_throw_exception(): void
     {
         $view = new View('tests/views/');
         ob_start();
@@ -22,7 +24,7 @@ final class ViewTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    public function testIfViewCanBeRenderedWithoutTrailingSlash(): void
+    public function test_if_view_can_be_rendered_without_trailing_slash(): void
     {
         $view = new View('tests/views');
         ob_start();
@@ -32,7 +34,7 @@ final class ViewTest extends TestCase
         $this->assertStringContainsString('This is the the passed argument.', $output);
     }
 
-    public function testCorrectPathRendersCorrectly(): void
+    public function test_correct_path_renders_correctly(): void
     {
         $view = new View('tests/views/');
         ob_start();

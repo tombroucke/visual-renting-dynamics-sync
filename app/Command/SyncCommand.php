@@ -2,14 +2,13 @@
 
 namespace Otomaties\VisualRentingDynamicsSync\Command;
 
+use Otomaties\VisualRentingDynamicsSync\Command\Contracts\CommandContract;
 use Otomaties\VisualRentingDynamicsSync\Helpers\CachingPlugins;
 use Otomaties\VisualRentingDynamicsSync\Services\ArticleSyncService;
 use Otomaties\VisualRentingDynamicsSync\Services\CategorySyncService;
-use Otomaties\VisualRentingDynamicsSync\Command\Contracts\CommandContract;
 
 class SyncCommand implements CommandContract
 {
-    
     public const COMMAND_NAME = 'vrd sync';
 
     public const COMMAND_DESCRIPTION = 'Syncs all categories and articles from Visual Renting Dynamics';
@@ -26,15 +25,14 @@ class SyncCommand implements CommandContract
             'name' => 'skip-images',
             'description' => 'Skip images when syncing articles and categories',
             'optional' => true,
-        ]
+        ],
     ];
 
     public function __construct(
         private CategorySyncService $categorySyncService,
         private ArticleSyncService $articleSyncService,
         private CachingPlugins $cachingPlugins,
-    ) {
-    }
+    ) {}
 
     /**
      * Run below command to activate:

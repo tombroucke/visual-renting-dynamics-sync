@@ -8,13 +8,13 @@ class Admin
 {
     public function __construct(
         private Assets $assets
-    ) {
-    }
+    ) {}
 
-    public function runHooks() : self
+    public function runHooks(): self
     {
         add_action('woocommerce_admin_order_data_after_shipping_address', [$this, 'addCustomFieldsToOrderDetails']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueScripts'], 999);
+
         return $this;
     }
 
@@ -22,7 +22,7 @@ class Admin
     {
         foreach ($this->assets->entrypoints()->admin->css as $css) {
             wp_enqueue_style(
-                'vrd-admin-' . $css,
+                'vrd-admin-'.$css,
                 $this->assets->url($css),
                 [],
                 null
@@ -40,7 +40,7 @@ class Admin
             ->each(function ($fieldSettings, $fieldName) use ($order) {
                 $value = $order->get_meta($fieldName);
                 if ($value) {
-                    echo '<p><strong>' . $fieldSettings['label'] . ':</strong><br />' . $value . '</p>';
+                    echo '<p><strong>'.$fieldSettings['label'].':</strong><br />'.$value.'</p>';
                 }
             });
     }

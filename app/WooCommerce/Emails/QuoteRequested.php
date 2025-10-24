@@ -7,15 +7,15 @@ class QuoteRequested extends \WC_Email
     public function __construct()
     {
 
-        $this->id             = 'quote_requested';
-        $this->title          = __('New quote request', 'visual-renting-dynamics-sync');
-        $this->description    = __('When an order is successfully sent to Visual Renting Dynamics Sync, this e-mail is sent to the shop administrator.', 'visual-renting-dynamics-sync'); // phpcs:ignore Generic.Files.LineLength.TooLong
-        $this->heading        = __('New quote request', 'visual-renting-dynamics-sync');
-        $this->subject        = __('New quote request', 'visual-renting-dynamics-sync');
-        $this->template_html  = 'emails/admin-new-order.php';
+        $this->id = 'quote_requested';
+        $this->title = __('New quote request', 'visual-renting-dynamics-sync');
+        $this->description = __('When an order is successfully sent to Visual Renting Dynamics Sync, this e-mail is sent to the shop administrator.', 'visual-renting-dynamics-sync'); // phpcs:ignore Generic.Files.LineLength.TooLong
+        $this->heading = __('New quote request', 'visual-renting-dynamics-sync');
+        $this->subject = __('New quote request', 'visual-renting-dynamics-sync');
+        $this->template_html = 'emails/admin-new-order.php';
         $this->template_plain = 'emails/plain/admin-new-order.php';
-        $this->placeholders   = [
-            '{order_date}'   => '',
+        $this->placeholders = [
+            '{order_date}' => '',
             '{order_number}' => '',
         ];
 
@@ -31,6 +31,7 @@ class QuoteRequested extends \WC_Email
      * Get email subject.
      *
      * @since  3.1.0
+     *
      * @return string
      */
     public function get_default_subject()
@@ -42,6 +43,7 @@ class QuoteRequested extends \WC_Email
      * Get email heading.
      *
      * @since  3.1.0
+     *
      * @return string
      */
     public function get_default_heading()
@@ -49,12 +51,11 @@ class QuoteRequested extends \WC_Email
         return __('New quote request: #{order_number}', 'visual-renting-dynamics-sync');
     }
 
-
     /**
      * Trigger the sending of this email.
      *
-     * @param int            $order_id The order ID.
-     * @param WC_Order|false $order Order object.
+     * @param  int  $order_id  The order ID.
+     * @param  WC_Order|false  $order  Order object.
      */
     public function trigger($order_id, $order = false)
     {
@@ -65,8 +66,8 @@ class QuoteRequested extends \WC_Email
         }
 
         if (is_a($order, 'WC_Order')) {
-            $this->object                         = $order;
-            $this->placeholders['{order_date}']   = wc_format_datetime($this->object->get_date_created());
+            $this->object = $order;
+            $this->placeholders['{order_date}'] = wc_format_datetime($this->object->get_date_created());
             $this->placeholders['{order_number}'] = $this->object->get_order_number();
         }
 
@@ -89,14 +90,14 @@ class QuoteRequested extends \WC_Email
     {
         return wc_get_template_html(
             $this->template_html,
-            array(
-                'order'              => $this->object,
-                'email_heading'      => $this->get_heading(),
+            [
+                'order' => $this->object,
+                'email_heading' => $this->get_heading(),
                 'additional_content' => $this->get_additional_content(),
-                'sent_to_admin'      => true,
-                'plain_text'         => false,
-                'email'              => $this,
-            )
+                'sent_to_admin' => true,
+                'plain_text' => false,
+                'email' => $this,
+            ]
         );
     }
 
@@ -109,14 +110,14 @@ class QuoteRequested extends \WC_Email
     {
         return wc_get_template_html(
             $this->template_plain,
-            array(
-                'order'              => $this->object,
-                'email_heading'      => $this->get_heading(),
+            [
+                'order' => $this->object,
+                'email_heading' => $this->get_heading(),
                 'additional_content' => $this->get_additional_content(),
-                'sent_to_admin'      => true,
-                'plain_text'         => true,
-                'email'              => $this,
-            )
+                'sent_to_admin' => true,
+                'plain_text' => true,
+                'email' => $this,
+            ]
         );
     }
 
@@ -124,6 +125,7 @@ class QuoteRequested extends \WC_Email
      * Default content to show below main email content.
      *
      * @since 3.7.0
+     *
      * @return string
      */
     public function get_default_additional_content()
@@ -137,6 +139,7 @@ class QuoteRequested extends \WC_Email
      * Displayed above the footer.
      *
      * @since 3.7.0
+     *
      * @return string
      */
     public function get_additional_content()
@@ -146,7 +149,7 @@ class QuoteRequested extends \WC_Email
          *
          * @since 7.8.0
          */
-        return apply_filters('woocommerce_email_additional_content_' . $this->id, $this->format_string($this->get_option('additional_content')), $this->object, $this); // phpcs:ignore Generic.Files.LineLength.TooLong
+        return apply_filters('woocommerce_email_additional_content_'.$this->id, $this->format_string($this->get_option('additional_content')), $this->object, $this); // phpcs:ignore Generic.Files.LineLength.TooLong
     }
 
     /**
@@ -155,57 +158,57 @@ class QuoteRequested extends \WC_Email
     public function init_form_fields()
     {
         /* translators: %s: list of placeholders */
-        $placeholder_text  = sprintf(__('Available placeholders: %s', 'woocommerce'), '<code>' . implode('</code>, <code>', array_keys($this->placeholders)) . '</code>'); // phpcs:ignore Generic.Files.LineLength.TooLong
-        $this->form_fields = array(
-            'enabled'            => array(
-                'title'   => __('Enable/Disable', 'woocommerce'),
-                'type'    => 'checkbox',
-                'label'   => __('Enable this email notification', 'woocommerce'),
+        $placeholder_text = sprintf(__('Available placeholders: %s', 'woocommerce'), '<code>'.implode('</code>, <code>', array_keys($this->placeholders)).'</code>'); // phpcs:ignore Generic.Files.LineLength.TooLong
+        $this->form_fields = [
+            'enabled' => [
+                'title' => __('Enable/Disable', 'woocommerce'),
+                'type' => 'checkbox',
+                'label' => __('Enable this email notification', 'woocommerce'),
                 'default' => 'yes',
-            ),
-            'recipient'          => array(
-                'title'       => __('Recipient(s)', 'woocommerce'),
-                'type'        => 'text',
+            ],
+            'recipient' => [
+                'title' => __('Recipient(s)', 'woocommerce'),
+                'type' => 'text',
                 /* translators: %s: WP admin email */
-                'description' => sprintf(__('Enter recipients (comma separated) for this email. Defaults to %s.', 'woocommerce'), '<code>' . esc_attr(get_option('admin_email')) . '</code>'), // phpcs:ignore Generic.Files.LineLength.TooLong
+                'description' => sprintf(__('Enter recipients (comma separated) for this email. Defaults to %s.', 'woocommerce'), '<code>'.esc_attr(get_option('admin_email')).'</code>'), // phpcs:ignore Generic.Files.LineLength.TooLong
                 'placeholder' => '',
-                'default'     => '',
-                'desc_tip'    => true,
-            ),
-            'subject'            => array(
-                'title'       => __('Subject', 'woocommerce'),
-                'type'        => 'text',
-                'desc_tip'    => true,
+                'default' => '',
+                'desc_tip' => true,
+            ],
+            'subject' => [
+                'title' => __('Subject', 'woocommerce'),
+                'type' => 'text',
+                'desc_tip' => true,
                 'description' => $placeholder_text,
                 'placeholder' => $this->get_default_subject(),
-                'default'     => '',
-            ),
-            'heading'            => array(
-                'title'       => __('Email heading', 'woocommerce'),
-                'type'        => 'text',
-                'desc_tip'    => true,
+                'default' => '',
+            ],
+            'heading' => [
+                'title' => __('Email heading', 'woocommerce'),
+                'type' => 'text',
+                'desc_tip' => true,
                 'description' => $placeholder_text,
                 'placeholder' => $this->get_default_heading(),
-                'default'     => '',
-            ),
-            'additional_content' => array(
-                'title'       => __('Additional content', 'woocommerce'),
-                'description' => __('Text to appear below the main email content.', 'woocommerce') . ' ' . $placeholder_text, // phpcs:ignore Generic.Files.LineLength.TooLong
-                'css'         => 'width:400px; height: 75px;',
+                'default' => '',
+            ],
+            'additional_content' => [
+                'title' => __('Additional content', 'woocommerce'),
+                'description' => __('Text to appear below the main email content.', 'woocommerce').' '.$placeholder_text, // phpcs:ignore Generic.Files.LineLength.TooLong
+                'css' => 'width:400px; height: 75px;',
                 'placeholder' => __('N/A', 'woocommerce'),
-                'type'        => 'textarea',
-                'default'     => $this->get_default_additional_content(),
-                'desc_tip'    => true,
-            ),
-            'email_type'         => array(
-                'title'       => __('Email type', 'woocommerce'),
-                'type'        => 'select',
+                'type' => 'textarea',
+                'default' => $this->get_default_additional_content(),
+                'desc_tip' => true,
+            ],
+            'email_type' => [
+                'title' => __('Email type', 'woocommerce'),
+                'type' => 'select',
                 'description' => __('Choose which format of email to send.', 'woocommerce'),
-                'default'     => 'html',
-                'class'       => 'email_type wc-enhanced-select',
-                'options'     => $this->get_email_type_options(),
-                'desc_tip'    => true,
-            ),
-        );
+                'default' => 'html',
+                'class' => 'email_type wc-enhanced-select',
+                'options' => $this->get_email_type_options(),
+                'desc_tip' => true,
+            ],
+        ];
     }
 }

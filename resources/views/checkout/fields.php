@@ -1,5 +1,5 @@
 <div class="vrd-fields__field-wrapper">
-    <?php foreach ($fields as $category) : ?>
+    <?php foreach ($fields as $category) { ?>
         <h4><?php echo $category['label']; ?></h4>
         <?php foreach ($category['fields'] as $fieldName => $fieldSettings) {
             woocommerce_form_field(
@@ -7,5 +7,5 @@
                 $fieldSettings
             );
         } ?>
-    <?php endforeach; ?>
+    <?php } ?>
 </div>

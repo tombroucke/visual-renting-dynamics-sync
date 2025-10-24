@@ -1,12 +1,12 @@
 <?php
 
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use Otomaties\VisualRentingDynamicsSync\Api;
-use Otomaties\VisualRentingDynamicsSync\Plugin;
-use Otomaties\VisualRentingDynamicsSync\Helpers\View;
+use Monolog\Logger;
 use Otomaties\VisualRentingDynamicsSync\Admin\Settings;
+use Otomaties\VisualRentingDynamicsSync\Api;
 use Otomaties\VisualRentingDynamicsSync\Helpers\Assets;
+use Otomaties\VisualRentingDynamicsSync\Helpers\View;
+use Otomaties\VisualRentingDynamicsSync\Plugin;
 
 /*
  * Plugin Name:       Visual Renting Dynamics Sync
@@ -22,7 +22,7 @@ use Otomaties\VisualRentingDynamicsSync\Helpers\Assets;
 
 // If this file is called directly, abort.
 if (! defined('WPINC')) {
-    die;
+    exit;
 }
 
 /**
@@ -34,11 +34,11 @@ function visualRentingDynamicSync()
 {
     static $plugin;
 
-    if (!$plugin) {
-        $plugin = new Plugin();
+    if (! $plugin) {
+        $plugin = new Plugin;
         $plugin->runHooks();
-        
-        do_action("visual_renting_dynamics_sync", $plugin);
+
+        do_action('visual_renting_dynamics_sync', $plugin);
     }
 
     return $plugin;
@@ -49,14 +49,15 @@ function visualRentingDynamicSync()
  */
 add_action('visual_renting_dynamics_sync', function ($plugin) {
     $plugin->singleton(Settings::class, function ($plugin, $args) {
-        return new Settings();
+        return new Settings;
     });
 
     $plugin->singleton(Logger::class, function () {
         $log = new Logger('visual-renting-dynamics-sync');
-        $path = wp_upload_dir()['basedir'] . '/visual-renting-dynamics-sync.log';
+        $path = wp_upload_dir()['basedir'].'/visual-renting-dynamics-sync.log';
         $logLevel = isset($_SERVER['WP_ENV']) && $_SERVER['WP_ENV'] === 'development' ? Logger::DEBUG : Logger::INFO;
         $log->pushHandler(new StreamHandler($path, $logLevel));
+
         return $log;
     });
 
@@ -64,21 +65,25 @@ add_action('visual_renting_dynamics_sync', function ($plugin) {
         $apiKey = $plugin->make(Settings::class)->get('api_key') ?? '';
         $logger = $plugin->make(Logger::class);
         $client = $plugin->make(\GuzzleHttp\Client::class);
+
         return new Api($apiKey, $client, $logger);
     });
 
     $plugin->singleton(View::class, function ($plugin, $args) {
-        $path = plugin_dir_path(__FILE__) . 'resources/views/';
+        $path = plugin_dir_path(__FILE__).'resources/views/';
+
         return new View($path);
     });
 
     $plugin->singleton(Assets::class, function ($plugin, $args) {
         $path = plugin_dir_path(__FILE__);
+
         return new Assets($path);
     });
 
     $plugin->singleton('custom-checkout-fields', function ($plugin, $args) {
         $clientReferenceCharacterLimit = 50;
+
         return apply_filters('visual_renting_dynamics_custom_checkout_fields', collect([
             'event' => [
                 'label' => __('Event details', 'visual-renting-dynamics-sync'),
@@ -104,7 +109,7 @@ add_action('visual_renting_dynamics_sync', function ($plugin) {
                         'custom_attributes' => [
                             'data-delivery-label' => __('Shipping date', 'visual-renting-dynamics-sync'),
                             'data-pickup-label' => __('Pickup date', 'visual-renting-dynamics-sync'),
-                        ]
+                        ],
                     ],
                     'vrd_return_date' => [
                         'type' => 'date',
@@ -113,7 +118,7 @@ add_action('visual_renting_dynamics_sync', function ($plugin) {
                         'input_class' => ['form-control'],
                         'default' => WC()->session ? WC()->session->get('vrd_return_date') : '',
                     ],
-                ]
+                ],
             ],
             'client' => [
                 'label' => __('Client details', 'visual-renting-dynamics-sync'),
@@ -133,7 +138,7 @@ add_action('visual_renting_dynamics_sync', function ($plugin) {
                         'maxlength' => $clientReferenceCharacterLimit,
                     ],
                 ],
-            ]
+            ],
         ]));
     });
 });

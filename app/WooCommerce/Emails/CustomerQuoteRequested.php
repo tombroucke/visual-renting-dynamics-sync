@@ -7,17 +7,17 @@ class CustomerQuoteRequested extends \WC_Email
     public function __construct()
     {
 
-        $this->id             = 'customer_quote_requested';
+        $this->id = 'customer_quote_requested';
         $this->customer_email = true;
-        
-        $this->title          = __('Quote requested', 'visual-renting-dynamics-sync');
-        $this->description    = __('This is a quote request notification sent to customers containing order details.', 'visual-renting-dynamics-sync'); // phpcs:ignore Generic.Files.LineLength.TooLong
-        $this->heading        = __('Quote requested', 'visual-renting-dynamics-sync');
-        $this->subject        = __('Quote requested', 'visual-renting-dynamics-sync');
-        $this->template_html  = 'emails/customer-processing-order.php';
+
+        $this->title = __('Quote requested', 'visual-renting-dynamics-sync');
+        $this->description = __('This is a quote request notification sent to customers containing order details.', 'visual-renting-dynamics-sync'); // phpcs:ignore Generic.Files.LineLength.TooLong
+        $this->heading = __('Quote requested', 'visual-renting-dynamics-sync');
+        $this->subject = __('Quote requested', 'visual-renting-dynamics-sync');
+        $this->template_html = 'emails/customer-processing-order.php';
         $this->template_plain = 'emails/plain/customer-processing-order.php';
-        $this->placeholders   = [
-            '{order_date}'   => '',
+        $this->placeholders = [
+            '{order_date}' => '',
             '{order_number}' => '',
         ];
 
@@ -31,6 +31,7 @@ class CustomerQuoteRequested extends \WC_Email
      * Get email subject.
      *
      * @since  3.1.0
+     *
      * @return string
      */
     public function get_default_subject()
@@ -42,6 +43,7 @@ class CustomerQuoteRequested extends \WC_Email
      * Get email heading.
      *
      * @since  3.1.0
+     *
      * @return string
      */
     public function get_default_heading()
@@ -58,9 +60,9 @@ class CustomerQuoteRequested extends \WC_Email
         }
 
         if (is_a($order, 'WC_Order')) {
-            $this->object                         = $order;
-            $this->recipient                      = $this->object->get_billing_email();
-            $this->placeholders['{order_date}']   = wc_format_datetime($this->object->get_date_created());
+            $this->object = $order;
+            $this->recipient = $this->object->get_billing_email();
+            $this->placeholders['{order_date}'] = wc_format_datetime($this->object->get_date_created());
             $this->placeholders['{order_number}'] = $this->object->get_order_number();
         }
 
@@ -80,14 +82,14 @@ class CustomerQuoteRequested extends \WC_Email
     {
         return wc_get_template_html(
             $this->template_html,
-            array(
-                'order'              => $this->object,
-                'email_heading'      => $this->get_heading(),
+            [
+                'order' => $this->object,
+                'email_heading' => $this->get_heading(),
                 'additional_content' => $this->get_additional_content(),
-                'sent_to_admin'      => false,
-                'plain_text'         => false,
-                'email'              => $this,
-            )
+                'sent_to_admin' => false,
+                'plain_text' => false,
+                'email' => $this,
+            ]
         );
     }
 
@@ -100,14 +102,14 @@ class CustomerQuoteRequested extends \WC_Email
     {
         return wc_get_template_html(
             $this->template_plain,
-            array(
-                'order'              => $this->object,
-                'email_heading'      => $this->get_heading(),
+            [
+                'order' => $this->object,
+                'email_heading' => $this->get_heading(),
                 'additional_content' => $this->get_additional_content(),
-                'sent_to_admin'      => false,
-                'plain_text'         => true,
-                'email'              => $this,
-            )
+                'sent_to_admin' => false,
+                'plain_text' => true,
+                'email' => $this,
+            ]
         );
     }
 
@@ -115,6 +117,7 @@ class CustomerQuoteRequested extends \WC_Email
      * Default content to show below main email content.
      *
      * @since 3.7.0
+     *
      * @return string
      */
     public function get_default_additional_content()

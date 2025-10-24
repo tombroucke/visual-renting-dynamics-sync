@@ -16,7 +16,7 @@
         "php": ">=8",
         "composer/installers": "^1.0 || ^2.0",
         "illuminate/container": "*",
-        "tombroucke/wp-sync-posts": "^2.0",
+        "tombroucke/wp-sync-posts": "dev-master",
         "monolog/monolog": "*",
         "illuminate/support": "*",
         "guzzlehttp/guzzle": "^7.8"
@@ -30,7 +30,8 @@
         "szepeviktor/phpstan-wordpress": "^1.3",
         "php-stubs/acf-pro-stubs": "^6.0",
         "php-stubs/woocommerce-stubs": "^8.4",
-        "ibericode/vat": "^2.0"
+        "ibericode/vat": "^2.0",
+        "laravel/pint": "^1.25"
     },
     "scripts": {
         "test": [

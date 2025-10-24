@@ -2,14 +2,14 @@
 
 namespace Otomaties\VisualRentingDynamicsSync;
 
-use Illuminate\Support\Str;
 use Illuminate\Container\Container;
+use Illuminate\Support\Str;
 use Otomaties\VisualRentingDynamicsSync\Admin\Admin;
-use Otomaties\VisualRentingDynamicsSync\WooCommerce\Cart;
-use Otomaties\VisualRentingDynamicsSync\WooCommerce\Account;
-use Otomaties\VisualRentingDynamicsSync\WooCommerce\Product;
-use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout;
 use Otomaties\VisualRentingDynamicsSync\Command\CommandRegistrar;
+use Otomaties\VisualRentingDynamicsSync\WooCommerce\Account;
+use Otomaties\VisualRentingDynamicsSync\WooCommerce\Cart;
+use Otomaties\VisualRentingDynamicsSync\WooCommerce\Checkout;
+use Otomaties\VisualRentingDynamicsSync\WooCommerce\Product;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\RentalProduct;
 use Otomaties\VisualRentingDynamicsSync\WooCommerce\StatusRegistrar;
 
@@ -27,7 +27,7 @@ class Plugin extends Container
         load_plugin_textdomain(
             'visual-renting-dynamics-sync',
             false,
-            dirname(plugin_basename(__FILE__), 2) . '/resources/languages'
+            dirname(plugin_basename(__FILE__), 2).'/resources/languages'
         );
     }
 
@@ -39,7 +39,7 @@ class Plugin extends Container
     public function initWoocommerce(): void
     {
         add_action('init', function () {
-            (new StatusRegistrar())
+            (new StatusRegistrar)
                 ->add(
                     'wc-quote-requested',
                     ['label' => __('Quote requested', 'visual-renting-dynamics-sync')]
@@ -61,15 +61,14 @@ class Plugin extends Container
             Checkout::class,
             Product::class,
             Admin::class,
-            Account::class
+            Account::class,
         ])
             ->map(fn ($class) => $this->make($class))
             ->each(function ($class) {
                 $class->runHooks();
             });
-        
 
-        $customEmailsClasses = collect(glob(__DIR__ . '/WooCommerce/Emails/*.php'))
+        $customEmailsClasses = collect(glob(__DIR__.'/WooCommerce/Emails/*.php'))
             ->map(fn ($file) => pathinfo($file, PATHINFO_FILENAME));
 
         add_filter('woocommerce_email_classes', function ($emailClasses) use ($customEmailsClasses) {
@@ -77,6 +76,7 @@ class Plugin extends Container
                 ->each(function ($class) use (&$emailClasses) {
                     $emailClasses[$class] = $this->make("Otomaties\\VisualRentingDynamicsSync\\WooCommerce\\Emails\\{$class}"); // phpcs:ignore Generic.Files.LineLength.TooLong
                 });
+
             return $emailClasses;
         });
 
@@ -86,17 +86,18 @@ class Plugin extends Container
                     $status = Str::of($class)
                         ->remove('Customer')
                         ->kebab();
-                    
+
                     $actions = [
                         "woocommerce_order_status_pending_to_{$status}",
-                        "woocommerce_order_status_failed_to_{$status}"
+                        "woocommerce_order_status_failed_to_{$status}",
                     ];
                     foreach ($actions as $action) {
-                        if (!in_array($action, $emailActions)) {
+                        if (! in_array($action, $emailActions)) {
                             $emailActions[] = $action;
                         }
                     }
                 });
+
             return $emailActions;
         });
     }
@@ -105,6 +106,7 @@ class Plugin extends Container
     {
         add_filter('product_type_selector', function ($productTypes) {
             $productTypes['rental'] = __('Rental', 'visual-renting-dynamics-sync');
+
             return $productTypes;
         });
 
@@ -112,6 +114,7 @@ class Plugin extends Container
             if ($productType === 'rental') {
                 return RentalProduct::class;
             }
+
             return $className;
         }, 10, 3);
 
@@ -122,6 +125,6 @@ class Plugin extends Container
     public function render(string $template, array $context = []): void
     {
         extract($context, EXTR_SKIP);
-        include __DIR__ . "/../views/{$template}.php";
+        include __DIR__."/../views/{$template}.php";
     }
 }

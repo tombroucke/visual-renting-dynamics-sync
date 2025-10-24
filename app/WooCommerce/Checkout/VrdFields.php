@@ -6,7 +6,6 @@ use Otomaties\VisualRentingDynamicsSync\Helpers\View;
 
 class VrdFields
 {
-
     public function runHooks()
     {
         $displayFieldsaction = apply_filters('visual_renting_dynamics_display_fields_action', 'woocommerce_checkout_before_order_review_heading'); // phpcs:ignore Generic.Files.LineLength.TooLong
@@ -18,7 +17,7 @@ class VrdFields
         add_action('woocommerce_checkout_update_order_meta', [$this, 'saveCustomFields']);
     }
 
-    public function addCustomFieldsToPostedData(array $postedData) : array
+    public function addCustomFieldsToPostedData(array $postedData): array
     {
         visualRentingDynamicSync()->make('custom-checkout-fields')
             ->pluck('fields')
@@ -26,7 +25,7 @@ class VrdFields
                 return $item;
             })
             ->each(function ($fieldSettings, $fieldName) use (&$postedData) {
-                if (!empty($_POST[$fieldName])) {
+                if (! empty($_POST[$fieldName])) {
                     $postedData[$fieldName] = sanitize_text_field($_POST[$fieldName]);
                 }
             });
@@ -39,7 +38,7 @@ class VrdFields
         visualRentingDynamicSync()
             ->make(View::class)
             ->render('checkout/fields', [
-                'fields' => visualRentingDynamicSync()->make('custom-checkout-fields')
+                'fields' => visualRentingDynamicSync()->make('custom-checkout-fields'),
             ]);
     }
 
@@ -52,11 +51,11 @@ class VrdFields
             })
             ->each(function ($fieldSettings, $fieldName) {
                 if (isset($fieldSettings['required']) && $fieldSettings['required'] && empty($_POST[$fieldName])) {
-                    $notice = '<strong>' . $fieldSettings['label'] . '</strong> ' . __('is a required field.', 'visual-renting-dynamics-sync'); // phpcs:ignore Generic.Files.LineLength.TooLong
+                    $notice = '<strong>'.$fieldSettings['label'].'</strong> '.__('is a required field.', 'visual-renting-dynamics-sync'); // phpcs:ignore Generic.Files.LineLength.TooLong
                     wc_add_notice($notice, 'error');
                 }
             });
-        
+
         if (isset($_POST['vrd_shipping_date']) && isset($_POST['vrd_return_date'])) {
             $shippingDate = \DateTime::createFromFormat('Y-m-d', $_POST['vrd_shipping_date']);
             $returnDate = \DateTime::createFromFormat('Y-m-d', $_POST['vrd_return_date']);
@@ -66,7 +65,7 @@ class VrdFields
             }
         }
 
-        if (strlen($_POST['billing_first_name'] . ' ' . $_POST['billing_last_name']) >= 150) {
+        if (strlen($_POST['billing_first_name'].' '.$_POST['billing_last_name']) >= 150) {
             $notice = __('Name must be less than 150 characters.', 'visual-renting-dynamics-sync');
             wc_add_notice($notice, 'error');
         }
@@ -80,7 +79,7 @@ class VrdFields
                 return $item;
             })
             ->each(function ($fieldSettings, $fieldName) {
-                if (!empty($_POST[$fieldName])) {
+                if (! empty($_POST[$fieldName])) {
                     WC()->session->set($fieldName, sanitize_text_field($_POST[$fieldName]));
                 }
             });
@@ -98,7 +97,7 @@ class VrdFields
             });
     }
 
-    public function saveCustomFields(int $orderId) : void
+    public function saveCustomFields(int $orderId): void
     {
         $order = wc_get_order($orderId);
         visualRentingDynamicSync()->make('custom-checkout-fields')
@@ -107,7 +106,7 @@ class VrdFields
                 return $item;
             })
             ->each(function ($fieldSettings, $fieldName) use ($order) {
-                if (!empty($_POST[$fieldName])) {
+                if (! empty($_POST[$fieldName])) {
                     $order->update_meta_data($fieldName, sanitize_text_field($_POST[$fieldName]));
                     $order->save();
                 }
