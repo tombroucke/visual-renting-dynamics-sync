@@ -144,8 +144,11 @@ class ArticleSyncService implements Runnable
                         'key' => '_sku',
                         'value' => $article['artikelcode'],
                     ];
-
-                    $syncer->addProduct($args, $existingPostQuery);
+                    
+                    $syncer->addProduct(
+                        apply_filters('visual_renting_dynamics_article_sync_args', $args, $article), 
+                        $existingPostQuery
+                    );
                 }
             );
 
